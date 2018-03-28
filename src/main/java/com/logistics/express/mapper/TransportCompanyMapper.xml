@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.TransportCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.TransportCompany" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="transport_company_name" property="transportCompanyName" jdbcType="VARCHAR" />
+    <result column="transport_company_address" property="transportCompanyAddress" jdbcType="VARCHAR" />
+    <result column="transport_company_contact" property="transportCompanyContact" jdbcType="VARCHAR" />
+    <result column="transport_company_contact_phone" property="transportCompanyContactPhone" jdbcType="VARCHAR" />
+    <result column="transport_company_crew_number" property="transportCompanyCrewNumber" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, transport_company_name, transport_company_address, transport_company_contact, 
+    transport_company_contact_phone, transport_company_crew_number
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from transport_company
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from transport_company
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.TransportCompany" >
+    insert into transport_company (id, transport_company_name, transport_company_address, 
+      transport_company_contact, transport_company_contact_phone, 
+      transport_company_crew_number)
+    values (#{id,jdbcType=INTEGER}, #{transportCompanyName,jdbcType=VARCHAR}, #{transportCompanyAddress,jdbcType=VARCHAR}, 
+      #{transportCompanyContact,jdbcType=VARCHAR}, #{transportCompanyContactPhone,jdbcType=VARCHAR}, 
+      #{transportCompanyCrewNumber,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.TransportCompany" >
+    insert into transport_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="transportCompanyName != null" >
+        transport_company_name,
+      </if>
+      <if test="transportCompanyAddress != null" >
+        transport_company_address,
+      </if>
+      <if test="transportCompanyContact != null" >
+        transport_company_contact,
+      </if>
+      <if test="transportCompanyContactPhone != null" >
+        transport_company_contact_phone,
+      </if>
+      <if test="transportCompanyCrewNumber != null" >
+        transport_company_crew_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="transportCompanyName != null" >
+        #{transportCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyAddress != null" >
+        #{transportCompanyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyContact != null" >
+        #{transportCompanyContact,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyContactPhone != null" >
+        #{transportCompanyContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyCrewNumber != null" >
+        #{transportCompanyCrewNumber,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.TransportCompany" >
+    update transport_company
+    <set >
+      <if test="transportCompanyName != null" >
+        transport_company_name = #{transportCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyAddress != null" >
+        transport_company_address = #{transportCompanyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyContact != null" >
+        transport_company_contact = #{transportCompanyContact,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyContactPhone != null" >
+        transport_company_contact_phone = #{transportCompanyContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="transportCompanyCrewNumber != null" >
+        transport_company_crew_number = #{transportCompanyCrewNumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.TransportCompany" >
+    update transport_company
+    set transport_company_name = #{transportCompanyName,jdbcType=VARCHAR},
+      transport_company_address = #{transportCompanyAddress,jdbcType=VARCHAR},
+      transport_company_contact = #{transportCompanyContact,jdbcType=VARCHAR},
+      transport_company_contact_phone = #{transportCompanyContactPhone,jdbcType=VARCHAR},
+      transport_company_crew_number = #{transportCompanyCrewNumber,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 获取运输公司列表 -->
+  <select id="getTransportCompanyList" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from transport_company
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取运输公司数量 -->
+  <select id="getCompanyCount" resultType="int">
+  	select count(*) 
+  	from transport_company
+  </select>
+  <!-- 根据id获取公司名称 -->
+  <select id="getNameById" parameterType="int" resultType="String">
+  	select transport_company_name
+  	from transport_company
+  	where id = #{id}
+  </select>
+  <!-- 添加司机 -->
+  <insert id="addDriverToCompany" parameterType="com.logistics.express.entity.Driver">
+  	insert into driver
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="driverName != null" >
+        driver_name,
+      </if>
+      <if test="driverIdCard != null" >
+        driver_id_card,
+      </if>
+      <if test="driverIdPic != null" >
+        driver_id_pic,
+      </if>
+      <if test="driverPhone != null" >
+        driver_phone,
+      </if>
+      <if test="comId != null" >
+        com_id,
+      </if>
+      <if test="plateNumber != null" >
+        plate_number,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="driverName != null" >
+        #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdCard != null" >
+        #{driverIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdPic != null" >
+        #{driverIdPic,jdbcType=VARCHAR},
+      </if>
+      <if test="driverPhone != null" >
+        #{driverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comId != null" >
+        #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 根据公司名称获取公司信息 -->
+  <select id="getCompanyByName" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from transport_company
+    where transport_company_name like concat('%',#{transportCompanyName},'%')
+  </select>
+</mapper>

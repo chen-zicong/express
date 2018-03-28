@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.DriverMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.Driver" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="driver_sex" property="driverSex" jdbcType="VARCHAR" />
+    <result column="driver_id_card" property="driverIdCard" jdbcType="VARCHAR" />
+    <result column="driver_id_pic" property="driverIdPic" jdbcType="VARCHAR" />
+    <result column="driver_phone" property="driverPhone" jdbcType="VARCHAR" />
+    <result column="com_id" property="comId" jdbcType="INTEGER" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="TransProcessMap" type="com.logistics.express.entity.Driver" >
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="driver_phone" property="driverPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="DriverStatusMap" type="com.logistics.express.entity.Driver" >
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, driver_name, driver_sex, driver_id_card, driver_id_pic, driver_phone, com_id, 
+    plate_number, car_type, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from driver
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from driver
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.Driver" >
+    insert into driver (id, driver_name, driver_sex, 
+      driver_id_card, driver_id_pic, driver_phone, 
+      com_id, plate_number, car_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{driverName,jdbcType=VARCHAR}, #{driverSex,jdbcType=VARCHAR}, 
+      #{driverIdCard,jdbcType=VARCHAR}, #{driverIdPic,jdbcType=VARCHAR}, #{driverPhone,jdbcType=VARCHAR}, 
+      #{comId,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, #{carType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.Driver" >
+    insert into driver
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="driverName != null" >
+        driver_name,
+      </if>
+      <if test="driverSex != null" >
+        driver_sex,
+      </if>
+      <if test="driverIdCard != null" >
+        driver_id_card,
+      </if>
+      <if test="driverIdPic != null" >
+        driver_id_pic,
+      </if>
+      <if test="driverPhone != null" >
+        driver_phone,
+      </if>
+      <if test="comId != null" >
+        com_id,
+      </if>
+      <if test="plateNumber != null" >
+        plate_number,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="driverName != null" >
+        #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverSex != null" >
+        #{driverSex,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdCard != null" >
+        #{driverIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdPic != null" >
+        #{driverIdPic,jdbcType=VARCHAR},
+      </if>
+      <if test="driverPhone != null" >
+        #{driverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comId != null" >
+        #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.Driver" >
+    update driver
+    <set >
+      <if test="driverName != null" >
+        driver_name = #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverSex != null" >
+        driver_sex = #{driverSex,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdCard != null" >
+        driver_id_card = #{driverIdCard,jdbcType=VARCHAR},
+      </if>
+      <if test="driverIdPic != null" >
+        driver_id_pic = #{driverIdPic,jdbcType=VARCHAR},
+      </if>
+      <if test="driverPhone != null" >
+        driver_phone = #{driverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comId != null" >
+        com_id = #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        plate_number = #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        car_type = #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.Driver" >
+    update driver
+    set driver_name = #{driverName,jdbcType=VARCHAR},
+      driver_sex = #{driverSex,jdbcType=VARCHAR},
+      driver_id_card = #{driverIdCard,jdbcType=VARCHAR},
+      driver_id_pic = #{driverIdPic,jdbcType=VARCHAR},
+      driver_phone = #{driverPhone,jdbcType=VARCHAR},
+      com_id = #{comId,jdbcType=INTEGER},
+      plate_number = #{plateNumber,jdbcType=VARCHAR},
+      car_type = #{carType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 获取未审核司机列表-->
+  <select id="getDriver" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from driver
+    where status = #{status}
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取司机数量 -->
+  <select id="getDriverCount" parameterType="int" resultType="int">
+  	select count(*)
+  	from driver
+  	where status = #{status}
+  </select>
+  <!-- 根据司机id获取司机信息 -->
+  <select id="getDriverById" parameterType="int" resultMap="TransProcessMap">
+  	select driver_name,driver_phone
+  	from driver
+  	where id = #{id}
+  </select>
+  <!-- 司机注册 -->
+  <insert id="driverRegister" parameterType="com.logistics.express.entity.Driver" >
+  	insert into driver (driver_name, 
+      driver_id_card, driver_id_pic, driver_phone, 
+      plate_number, car_type,status
+      )
+    values (
+	    #{driverName,jdbcType=VARCHAR},#{driverIdCard,jdbcType=VARCHAR}, #{driverIdPic,jdbcType=VARCHAR}, #{driverPhone,jdbcType=VARCHAR}, 
+	    #{plateNumber,jdbcType=VARCHAR}, #{carType,jdbcType=VARCHAR},#{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <!-- 微信端验证司机身份 -->
+  <select id="getDriverStatus" parameterType="map" resultMap="DriverStatusMap">
+  	select status,id
+  	from driver
+  	where driver_name = #{driverName} and driver_phone = #{driverPhone}
+  </select>
+  <!-- 根据司机名字获取司机信息 -->
+  <select id="getDriverByName" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from driver
+    where driver_name like concat('%',#{driverName},'%') and status = #{status}
+  </select>
+  <!-- 根据司机id获取身份证照片路径 -->
+  <select id="getImgById" parameterType="int" resultType="String">
+  	select 
+	driver_id_pic
+    from driver
+    where id = #{id}
+  </select>
+</mapper>

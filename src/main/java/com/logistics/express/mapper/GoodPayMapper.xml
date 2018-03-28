@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.GoodPayMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.GoodPay" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_phone" property="consigneePhone" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_phone" property="consignorPhone" jdbcType="VARCHAR" />
+    <result column="pay_price" property="payPrice" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, good_order_number, consignee_name, consignee_phone, consignee_address, consignor_name, 
+    consignor_phone, pay_price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from good_pay
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="String" >
+    delete from good_pay
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.GoodPay" >
+    insert into good_pay (id, good_order_number, consignee_name, 
+      consignee_phone, consignee_address, consignor_name, 
+      consignor_phone, pay_price)
+    values (#{id,jdbcType=INTEGER}, #{goodOrderNumber,jdbcType=VARCHAR}, #{consigneeName,jdbcType=VARCHAR}, 
+      #{consigneePhone,jdbcType=VARCHAR}, #{consigneeAddress,jdbcType=VARCHAR}, #{consignorName,jdbcType=VARCHAR}, 
+      #{consignorPhone,jdbcType=VARCHAR}, #{payPrice,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.GoodPay" >
+    insert into good_pay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodOrderNumber != null" >
+        good_order_number,
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name,
+      </if>
+      <if test="consigneePhone != null" >
+        consignee_phone,
+      </if>
+      <if test="consigneeAddress != null" >
+        consignee_address,
+      </if>
+      <if test="consignorName != null" >
+        consignor_name,
+      </if>
+      <if test="consignorPhone != null" >
+        consignor_phone,
+      </if>
+      <if test="payPrice != null" >
+        pay_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodOrderNumber != null" >
+        #{goodOrderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeName != null" >
+        #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneePhone != null" >
+        #{consigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeAddress != null" >
+        #{consigneeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorName != null" >
+        #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorPhone != null" >
+        #{consignorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="payPrice != null" >
+        #{payPrice,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.GoodPay" >
+    update good_pay
+    <set >
+      <if test="consigneeName != null" >
+        consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneePhone != null" >
+        consignee_phone = #{consigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeAddress != null" >
+        consignee_address = #{consigneeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorName != null" >
+        consignor_name = #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorPhone != null" >
+        consignor_phone = #{consignorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="payPrice != null" >
+        pay_price = #{payPrice,jdbcType=REAL},
+      </if>
+    </set>
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.GoodPay" >
+    update good_pay
+    set good_order_number = #{goodOrderNumber,jdbcType=VARCHAR},
+      consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      consignee_phone = #{consigneePhone,jdbcType=VARCHAR},
+      consignee_address = #{consigneeAddress,jdbcType=VARCHAR},
+      consignor_name = #{consignorName,jdbcType=VARCHAR},
+      consignor_phone = #{consignorPhone,jdbcType=VARCHAR},
+      pay_price = #{payPrice,jdbcType=REAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 后台获取交付信息 -->
+  <select id="getGoodPayList" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from good_pay
+    <where>
+    	<if test="goodOrderNumber != '' and goodOrderNumber != null" >
+        	good_order_number = #{goodOrderNumber}
+      	</if>
+    </where>
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取交付信息数量 -->
+  <select id="getCount" resultType="int">
+  	select count(*)
+  	from good_pay
+  </select>
+</mapper>

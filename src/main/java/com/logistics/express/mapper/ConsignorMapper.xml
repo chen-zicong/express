@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.ConsignorMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.Consignor" >
+    <id column="consignor_id" property="consignorId" jdbcType="INTEGER" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_phone" property="consignorPhone" jdbcType="VARCHAR" />
+    <result column="consignor_address" property="consignorAddress" jdbcType="VARCHAR" />
+    <result column="consignor_sex" property="consignorSex" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    consignor_id, consignor_name, consignor_phone, consignor_address, consignor_sex
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from consignor
+    where consignor_id = #{consignorId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from consignor
+    where consignor_id = #{consignorId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.Consignor" >
+    insert into consignor (consignor_id, consignor_name, consignor_phone, 
+      consignor_address, consignor_sex)
+    values (#{consignorId,jdbcType=INTEGER}, #{consignorName,jdbcType=VARCHAR}, #{consignorPhone,jdbcType=VARCHAR}, 
+      #{consignorAddress,jdbcType=VARCHAR}, #{consignorSex,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.Consignor" >
+    insert into consignor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="consignorId != null" >
+        consignor_id,
+      </if>
+      <if test="consignorName != null" >
+        consignor_name,
+      </if>
+      <if test="consignorPhone != null" >
+        consignor_phone,
+      </if>
+      <if test="consignorAddress != null" >
+        consignor_address,
+      </if>
+      <if test="consignorSex != null" >
+        consignor_sex,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="consignorId != null" >
+        #{consignorId,jdbcType=INTEGER},
+      </if>
+      <if test="consignorName != null" >
+        #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorPhone != null" >
+        #{consignorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorAddress != null" >
+        #{consignorAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorSex != null" >
+        #{consignorSex,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.Consignor" >
+    update consignor
+    <set >
+      <if test="consignorName != null" >
+        consignor_name = #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorPhone != null" >
+        consignor_phone = #{consignorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorAddress != null" >
+        consignor_address = #{consignorAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorSex != null" >
+        consignor_sex = #{consignorSex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where consignor_id = #{consignorId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.Consignor" >
+    update consignor
+    set consignor_name = #{consignorName,jdbcType=VARCHAR},
+      consignor_phone = #{consignorPhone,jdbcType=VARCHAR},
+      consignor_address = #{consignorAddress,jdbcType=VARCHAR},
+      consignor_sex = #{consignorSex,jdbcType=VARCHAR}
+    where consignor_id = #{consignorId,jdbcType=INTEGER}
+  </update>
+  <!-- 查询寄件人信息 -->
+  <select id="getConsignorMsg" parameterType="map" resultMap="BaseResultMap">
+  	select consignor
+  	<include refid="Base_Column_List" />
+    from consignor
+    where consignor_name = #{consignorName} and consignor_phone = #{consignorPhone}
+  </select>
+  <!-- 后台获取寄件人列表 -->
+  <select id="getConsignorList" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from consignor
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取寄件人数量 -->
+  <select id="getConsignorCount" resultType="int">
+  	select count(*)
+  	from consignor
+  </select>
+  <!-- 根据名字获取寄件人信息 -->
+  <select id="getConsignorByName" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from consignor
+    where consignor_name like concat('%',#{consignorName},'%')
+  </select>
+</mapper>

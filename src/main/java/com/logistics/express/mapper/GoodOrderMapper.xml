@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.GoodOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.GoodOrder" >
+    <id column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_phone" property="consignorPhone" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_phone" property="consigneePhone" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+    <result column="delivery_place" property="deliveryPlace" jdbcType="VARCHAR" />
+    <result column="receive_place" property="receivePlace" jdbcType="VARCHAR" />
+    <result column="delivery_time" property="deliveryTime" jdbcType="TIMESTAMP" />
+    <result column="require_arrive_time" property="requireArriveTime" jdbcType="TIMESTAMP" />
+    <result column="delivery_way" property="deliveryWay" jdbcType="VARCHAR" />
+    <result column="good_transport_car_type" property="goodTransportCarType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    good_order_number, consignor_name,consignor_phone, consignee_name, consignee_phone, consignee_address, delivery_place, receive_place, delivery_time, 
+    require_arrive_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from good_order
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from good_order
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.GoodOrder" >
+    insert into good_order (good_order_number, consignor_id, consignee_id, 
+      delivery_place, receive_place, delivery_time, 
+      require_arrive_time)
+    values (#{goodOrderNumber,jdbcType=VARCHAR}, #{consignorId,jdbcType=INTEGER}, #{consigneeId,jdbcType=INTEGER}, 
+      #{deliveryPlace,jdbcType=VARCHAR}, #{receivePlace,jdbcType=VARCHAR}, #{deliveryTime,jdbcType=TIMESTAMP}, 
+      #{requireArriveTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.GoodOrder" >
+    insert into good_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodOrderNumber != null" >
+        good_order_number,
+      </if>
+      <if test="consignorName != null" >
+        consignor_name,
+      </if>
+      <if test="consignorPhone != null" >
+        consignor_phone,
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name,
+      </if>
+      <if test="consigneePhone != null" >
+        consignee_phone,
+      </if>
+      <if test="consigneeAddress != null" >
+        consignee_address,
+      </if>
+      <if test="deliveryPlace != null" >
+        delivery_place,
+      </if>
+      <if test="receivePlace != null" >
+        receive_place,
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time,
+      </if>
+      <if test="requireArriveTime != null" >
+        require_arrive_time,
+      </if>
+      <if test="deliveryWay != null" >
+        delivery_way,
+      </if>
+      <if test="goodTransportCarType != null" >
+        good_transport_car_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodOrderNumber != null" >
+        #{goodOrderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorName != null" >
+        #{consignorName,jdbcType=VARCHAR},
+      </if>
+      <if test="consignorPhone != null" >
+        #{consignorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeName != null" >
+        #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneePhone != null" >
+        #{consigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeAddress != null" >
+        #{consigneeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPlace != null" >
+        #{deliveryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="receivePlace != null" >
+        #{receivePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryTime != null" >
+        #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requireArriveTime != null" >
+        #{requireArriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryWay != null" >
+        #{deliveryWay,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportCarType != null" >
+        #{goodTransportCarType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.GoodOrder" >
+    update good_order
+    <set >
+     
+      <if test="deliveryPlace != null" >
+        delivery_place = #{deliveryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="receivePlace != null" >
+        receive_place = #{receivePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requireArriveTime != null" >
+        require_arrive_time = #{requireArriveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="connectStatus != null" >
+        connect_status = #{connectStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.GoodOrder" >
+    update good_order
+    set 
+      consignee_id = #{consigneeId,jdbcType=INTEGER},
+      delivery_place = #{deliveryPlace,jdbcType=VARCHAR},
+      receive_place = #{receivePlace,jdbcType=VARCHAR},
+      delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
+      require_arrive_time = #{requireArriveTime,jdbcType=TIMESTAMP}
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </update>
+  <!-- 获取订单列表 -->
+  <select id="getOrderList" parameterType="map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from good_order
+    where connect_status = 0
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取订单数量 -->
+  <select id="getOrderCount" resultType="int">
+  	select count(*)
+  	from good_order
+  </select>
+  <!-- 根据订单号获取货物要求到达时间 -->
+  <select id="getRequireArrivetime" parameterType="String" resultType="Date">
+  	select require_arrive_time
+  	from good_order
+  	where good_order_number = #{goodOrderNumber}
+  </select>	
+  <!-- 根据订单号获取订单 信息-->
+  <select id="getOrderByNumber" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from good_order
+    where good_order_number = #{goodOrderNumber}
+  </select>
+</mapper>

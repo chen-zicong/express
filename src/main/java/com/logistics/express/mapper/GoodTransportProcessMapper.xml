@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.GoodTransportProcessMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.GoodTransportProcess" >
+    <id column="good_transport_process_id" property="goodTransportProcessId" jdbcType="INTEGER" />
+    <result column="good_transport_process_status" property="goodTransportProcessStatus" jdbcType="INTEGER" />
+    <result column="good_transport_process_position" property="goodTransportProcessPosition" jdbcType="VARCHAR" />
+    <result column="good_transport_process_exception" property="goodTransportProcessException" jdbcType="VARCHAR" />
+    <result column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+    <result column="good_transport_process_time" property="goodTransportProcesstime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_driver_id" property="goodTransportDriverId" jdbcType="INTEGER" />
+    <result column="audite_status" property="auditeStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    good_transport_process_id, good_transport_process_status, good_transport_process_position, 
+    good_transport_process_exception,good_transport_process_time,good_transport_driver_id,good_order_number
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from good_transport_process
+    where good_transport_process_id = #{goodTransportProcessId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="String" >
+    delete from good_transport_process
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.GoodTransportProcess" >
+    insert into good_transport_process (good_transport_process_id, good_transport_process_status, 
+      good_transport_process_position, good_transport_process_exception
+      )
+    values (#{goodTransportProcessId,jdbcType=INTEGER}, #{goodTransportProcessStatus,jdbcType=INTEGER}, 
+      #{goodTransportProcessPosition,jdbcType=VARCHAR}, #{goodTransportProcessException,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.GoodTransportProcess" >
+    insert into good_transport_process
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodTransportProcessId != null" >
+        good_transport_process_id,
+      </if>
+      <if test="goodTransportProcessStatus != null" >
+        good_transport_process_status,
+      </if>
+      <if test="goodTransportProcessPosition != null" >
+        good_transport_process_position,
+      </if>
+      <if test="goodTransportProcessException != null" >
+        good_transport_process_exception,
+      </if>
+      <if test="goodOrderNumber != null" >
+        good_order_number,
+      </if>
+      <if test="goodTransportProcessTime != null" >
+        good_transport_process_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodTransportProcessId != null" >
+        #{goodTransportProcessId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportProcessStatus != null" >
+        #{goodTransportProcessStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportProcessPosition != null" >
+        #{goodTransportProcessPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportProcessException != null" >
+        #{goodTransportProcessException,jdbcType=VARCHAR},
+      </if>
+      <if test="goodOrderNumber != null" >
+        #{goodOrderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportProcessTime != null" >
+        #{goodTransportProcessTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.GoodTransportProcess" >
+    update good_transport_process
+    <set >
+    	<if test="goodTransportDriverId != 0">
+    	good_transport_driver_id = #{goodTransportDriverId}
+    	</if>
+      <if test="goodTransportProcessStatus != null" >
+        good_transport_process_status = #{goodTransportProcessStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportProcessPosition != null" >
+        good_transport_process_position = #{goodTransportProcessPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportProcessException != null" >
+        good_transport_process_exception = #{goodTransportProcessException,jdbcType=VARCHAR},
+      </if>
+      <if test="auditeStatus != 0" >
+        audite_status = #{auditeStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.GoodTransportProcess" >
+    update good_transport_process
+    set good_transport_process_status = #{goodTransportProcessStatus,jdbcType=INTEGER},
+      good_transport_process_position = #{goodTransportProcessPosition,jdbcType=VARCHAR},
+      good_transport_process_exception = #{goodTransportProcessException,jdbcType=VARCHAR}
+    where good_transport_process_id = #{goodTransportProcessId,jdbcType=INTEGER}
+  </update>
+  <!-- 通过单号查询货物实时位置信息 -->
+  <select id="getTransportProcessMsg" parameterType="String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from good_transport_process
+    where good_order_number = #{goodOrderNumber}
+  </select>
+  <!-- 获取货物运输信息列表 -->
+  <select id="getTransportProcessList" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from good_transport_process
+    where audite_status = 1
+	limit #{start},#{pagesize}
+  </select>
+  <!-- 获取货物运输信息列表数量 -->
+  <select id="getTransProcessListCount" resultType="int">
+  	select count(*)
+  	from good_transport_process
+  	where audite_status = 1
+  </select>
+  <!-- 根据司机Id获取所有运输信息 -->
+  <select id="getTransProcessByDriverId" parameterType="int" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from good_transport_process
+    where good_transport_driver_id = #{driverId} and audite_status = 1
+  </select>
+  <!-- 根据订单号获取运输信息 -->
+  <select id="getProcessByOrder" parameterType="String" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from good_transport_process
+    where good_order_number = #{goodOrderNumber} and audite_status = 1
+  </select>
+</mapper>

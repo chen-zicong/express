@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.ConsigneeMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.Consignee" >
+    <id column="consignee_id" property="consigneeId" jdbcType="INTEGER" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_phone" property="consigneePhone" jdbcType="VARCHAR" />
+    <result column="reservePerson_name" property="reservepersonName" jdbcType="VARCHAR" />
+    <result column="reservePerson_phone" property="reservepersonPhone" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    consignee_id, consignee_name, consignee_phone, reservePerson_name, reservePerson_phone, 
+    consignee_address
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from consignee
+    where consignee_id = #{consigneeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from consignee
+    where consignee_id = #{consigneeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.Consignee" >
+    insert into consignee (consignee_id, consignee_name, consignee_phone, 
+      reservePerson_name, reservePerson_phone, 
+      consignee_address)
+    values (#{consigneeId,jdbcType=INTEGER}, #{consigneeName,jdbcType=VARCHAR}, #{consigneePhone,jdbcType=VARCHAR}, 
+      #{reservepersonName,jdbcType=VARCHAR}, #{reservepersonPhone,jdbcType=VARCHAR}, 
+      #{consigneeAddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.Consignee" >
+    insert into consignee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="consigneeId != null" >
+        consignee_id,
+      </if>
+      <if test="consigneeName != null" >
+        consignee_name,
+      </if>
+      <if test="consigneePhone != null" >
+        consignee_phone,
+      </if>
+      <if test="reservepersonName != null" >
+        reservePerson_name,
+      </if>
+      <if test="reservepersonPhone != null" >
+        reservePerson_phone,
+      </if>
+      <if test="consigneeAddress != null" >
+        consignee_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="consigneeId != null" >
+        #{consigneeId,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeName != null" >
+        #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneePhone != null" >
+        #{consigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="reservepersonName != null" >
+        #{reservepersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="reservepersonPhone != null" >
+        #{reservepersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeAddress != null" >
+        #{consigneeAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.Consignee" >
+    update consignee
+    <set >
+      <if test="consigneeName != null" >
+        consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneePhone != null" >
+        consignee_phone = #{consigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="reservepersonName != null" >
+        reservePerson_name = #{reservepersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="reservepersonPhone != null" >
+        reservePerson_phone = #{reservepersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consigneeAddress != null" >
+        consignee_address = #{consigneeAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where consignee_id = #{consigneeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.Consignee" >
+    update consignee
+    set consignee_name = #{consigneeName,jdbcType=VARCHAR},
+      consignee_phone = #{consigneePhone,jdbcType=VARCHAR},
+      reservePerson_name = #{reservepersonName,jdbcType=VARCHAR},
+      reservePerson_phone = #{reservepersonPhone,jdbcType=VARCHAR},
+      consignee_address = #{consigneeAddress,jdbcType=VARCHAR}
+    where consignee_id = #{consigneeId,jdbcType=INTEGER}
+  </update>
+  <!-- 通过姓名和手机号查询收件人 -->
+  <select id="getConsigneeMessage" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from consignee
+    where consignee_name = #{consigneeName} and consignee_phone = #{consigneePhone}
+  </select>
+  <!-- 后台获取收件人列表 -->
+  <select id="getConsigneeList" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from consignee
+    limit #{start},#{pagesize}
+  </select>
+  <!-- 获取收件人数量 -->
+  <select id="getConsigneeCount" resultType="int">
+  	select count(*)
+  	from consignee
+  </select>
+  <!-- 根据名字获取收件人信息 -->
+  <select id="getConsigneeByName" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from consignee
+    where consignee_name like concat('%',#{consigneeName},'%')
+  </select>
+</mapper>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.GoodTransportMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.GoodTransport" >
+    <id column="good_transport_id" property="goodTransportId" jdbcType="INTEGER" />
+    <result column="good_transport_consignor_name" property="goodTransportConsignorName" jdbcType="VARCHAR" />
+    <result column="good_transport_consignor_phone" property="goodTransportConsignorPhone" jdbcType="VARCHAR" />
+    <result column="good_transport_connector_name" property="goodTransportConnectorName" jdbcType="VARCHAR" />
+    <result column="good_transport_connector_phone" property="goodTransportConnectorPhone" jdbcType="VARCHAR" />
+    <result column="good_transport_connection_time" property="goodTransportConnectionTime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_transfer_time" property="goodTransportTransferTime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_dispatch_time" property="goodTransportDispatchTime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_dispatch_way" property="goodTransportDispatchWay" jdbcType="VARCHAR" />
+    <result column="good_transport_firm_id" property="goodTransportFirmId" jdbcType="INTEGER" />
+    <result column="good_transport_premium_id" property="goodTransportPremiumId" jdbcType="INTEGER" />
+    <result column="good_transport_driver_id" property="goodTransportDriverId" jdbcType="INTEGER" />
+    <result column="good_transport_arrive_estimated_time" property="goodTransportArriveEstimatedTime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_consignee_name" property="goodTransportConsigneeName" jdbcType="VARCHAR" />
+    <result column="good_transport_consignee_phone" property="goodTransportConsigneePhone" jdbcType="VARCHAR" />
+    <result column="good_transport_recieve_time" property="goodTransportRecieveTime" jdbcType="TIMESTAMP" />
+    <result column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+    <result column="good_transport_car_brand" property="goodTransportCarBrand" jdbcType="VARCHAR" />
+    <result column="good_transport_car_version" property="goodTransportCarVersion" jdbcType="VARCHAR" />
+    <result column="good_transport_car_status" property="goodTransportCarStatus" jdbcType="VARCHAR" />
+    <result column="good_transport_car_licence" property="goodTransportCarLicence" jdbcType="VARCHAR" />
+    <result column="good_transport_price" property="goodTransportprice" jdbcType="FLOAT" />
+  </resultMap>
+  
+  <resultMap id="ConnectorMap" type="com.logistics.express.entity.GoodTransport" >
+    <id column="good_transport_id" property="goodTransportId" jdbcType="INTEGER" />
+    <result column="good_transport_connector_name" property="goodTransportConnectorName" jdbcType="VARCHAR" />
+    <result column="good_transport_connector_phone" property="goodTransportConnectorPhone" jdbcType="VARCHAR" />
+    <result column="good_transport_connection_time" property="goodTransportConnectionTime" jdbcType="TIMESTAMP" />
+    <result column="good_transport_consignee_name" property="goodTransportConsigneeName" jdbcType="VARCHAR" />
+    <result column="good_transport_consignee_phone" property="goodTransportConsigneePhone" jdbcType="VARCHAR" />
+    <result column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+    <result column="good_transport_price" property="goodTransportprice" jdbcType="FLOAT" />
+    <result column="good_transport_dispatch_way" property="goodTransportDispatchWay" jdbcType="VARCHAR" />
+    <result column="good_transport_driver_id" property="goodTransportDriverId" jdbcType="INTEGER" />
+  	<result column="unaudite_reason" property="unAuditeReason" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    good_transport_id, good_transport_consignor_name,good_transport_consignor_phone,  good_transport_connector_name, good_transport_connector_phone, good_transport_connection_time,good_transport_transfer_time 
+    good_transport_dispatch_time, good_transport_dispatch_way, good_transport_firm_id, 
+    good_transport_premium_id, good_transport_driver_id, good_transport_arrive_estimated_time, 
+    good_transport_consignee_name, good_transport_consignee_phone, good_transport_recieve_time
+  </sql>
+  
+  <sql id="Connector_List" >
+  	good_transport_connector_name, good_transport_connector_phone, good_transport_consignee_name, good_transport_consignee_phone, good_order_number,good_transport_dispatch_way,good_transport_price,good_transport_driver_id,unaudite_reason 
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from good_transport
+    where good_transport_id = #{goodTransportId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="String" >
+    delete from good_transport
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.GoodTransport" >
+    insert into good_transport
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodTransportId != null" >
+        good_transport_id,
+      </if>
+      
+      <if test="goodTransportConnectorName != null" >
+        good_transport_connector_name,
+      </if>
+      <if test="goodTransportConnectorPhone != null" >
+        good_transport_connector_phone,
+      </if>
+      <if test="goodTransportTransferTime != null" >
+        good_transport_transfer_time,
+      </if>
+      <if test="goodTransportConnectionTime != null" >
+        good_transport_connection_time,
+      </if>
+      <if test="goodTransportDispatchTime != null" >
+        good_transport_dispatch_time,
+      </if>
+      <if test="goodTransportDispatchWay != null" >
+        good_transport_dispatch_way,
+      </if>
+      <if test="goodTransportFirmId != null" >
+        good_transport_firm_id,
+      </if>
+      <if test="goodTransportPremiumId != null" >
+        good_transport_premium_id,
+      </if>
+      <if test="goodTransportDriverId != null" >
+        good_transport_driver_id,
+      </if>
+      <if test="goodTransportArriveEstimatedTime != null" >
+        good_transport_arrive_estimated_time,
+      </if>
+      <if test="goodTransportConsigneeName != null" >
+        good_transport_consignee_name,
+      </if>
+      <if test="goodTransportConsigneePhone != null" >
+        good_transport_consignee_phone,
+      </if>
+      <if test="goodTransportRecieveTime != null" >
+        good_transport_recieve_time,
+      </if>
+      <if test="goodOrderNumber != null" >
+        good_order_number,
+      </if>
+      <if test="goodTransportCarBrand != null" >
+        good_transport_car_brand,
+      </if>
+      <if test="goodTransportCarVersion != null" >
+        good_transport_car_version,
+      </if>
+      <if test="goodTransportCarStatus != null" >
+        good_transport_car_status,
+      </if>
+      <if test="goodTransportCarLicence != null" >
+        good_transport_car_licence,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodTransportId != null" >
+        #{goodTransportId,jdbcType=INTEGER},
+      </if>
+      
+      <if test="goodTransportConnectorName != null" >
+        #{goodTransportConnectorName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConnectorPhone != null" >
+        #{goodTransportConnectorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConnectionTime != null" >
+        #{goodTransportConnectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportTransferTime != null" >
+        #{goodTransportTransferTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportDispatchTime != null" >
+        #{goodTransportDispatchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportDispatchWay != null" >
+        #{goodTransportDispatchWay,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportFirmId != null" >
+        #{goodTransportFirmId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportPremiumId != null" >
+        #{goodTransportPremiumId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportDriverId != null" >
+        #{goodTransportDriverId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportArriveEstimatedTime != null" >
+        #{goodTransportArriveEstimatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportConsigneeName != null" >
+        #{goodTransportConsigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConsigneePhone != null" >
+        #{goodTransportConsigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportRecieveTime != null" >
+        #{goodTransportRecieveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodOrderNumber != null" >
+        #{goodOrderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportCarBrand != null" >
+        #{goodTransportCarBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportCarVersion != null" >
+        #{goodTransportCarVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportCarStatus != null" >
+        #{goodTransportCarStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportCarLicence != null" >
+        #{goodTransportCarLicence,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!--更新运输信息，如运输方式，运输单位和司机,货运价格等信息 -->
+  <update id="updateByOrderNumber" parameterType="com.logistics.express.entity.GoodTransport" >
+    update good_transport
+    <set >
+    
+      <if test="goodTransportConnectorName != null" >
+        good_transport_connector_name = #{goodTransportConnectorName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConnectorPhone != null" >
+        good_transport_connector_phone = #{goodTransportConnectorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConnectionTime != null" >
+        good_transport_connection_time = #{goodTransportConnectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportDispatchTime != null" >
+        good_transport_dispatch_time = #{goodTransportDispatchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportDispatchWay != null" >
+        good_transport_dispatch_way = #{goodTransportDispatchWay,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportFirmId != null" >
+        good_transport_firm_id = #{goodTransportFirmId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportPremiumId != null" >
+        good_transport_premium_id = #{goodTransportPremiumId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportDriverId != null" >
+        good_transport_driver_id = #{goodTransportDriverId,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportArriveEstimatedTime != null" >
+        good_transport_arrive_estimated_time = #{goodTransportArriveEstimatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodTransportConsigneeName != null" >
+        good_transport_consignee_name = #{goodTransportConsigneeName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportConsigneePhone != null" >
+        good_transport_consignee_phone = #{goodTransportConsigneePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTransportRecieveTime != null" >
+        good_transport_recieve_time = #{goodTransportRecieveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditeStatus != 0" >
+        audite_status = #{auditeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodTransportPrice != null" >
+        good_transport_price = #{goodTransportPrice,jdbcType=FLOAT},
+      </if>
+      <if test="unAuditeReason != null" >
+        unaudite_reason = #{unAuditeReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据单号更新接件人信息 -->
+  <update id="updateConnectorMessage" parameterType="map">
+  	update good_transport
+  	set good_transport_connector_name = #{connectorName},
+  	    good_transport_connector_phone = #{connectorPhone},
+  	    good_transport_connection_time = #{connectionTime}
+  </update>
+  
+  <!-- 判断某订单是否有司机负责配送 -->
+  <select id="getDriverIdByOrder" parameterType="String" resultType="Integer">
+  	select good_transport_driver_id
+  	from good_transport
+  	where good_order_number = #{goodOrderNumber}
+  </select>
+  
+  <!-- 获取业务员接件信息 -->
+  <select id="getConnectMessage" parameterType="map" resultMap="ConnectorMap">
+  	select 
+  	<include refid="Connector_List" />
+  	from good_transport
+  	where audite_status = #{auditeStatus} and good_transport_connector_phone is not null
+  	limit #{start},#{pagesize}
+  </select>
+  
+  <!-- 获取业务员接件信息数量 -->
+  <select id="getConnectMessageCount" parameterType="int" resultType="int">
+  	select count(*)
+  	from good_transport
+  	where audite_status = #{auditeStatus} and good_transport_connector_phone is not null
+  </select>
+  
+  <!-- 根据订单号搜索相应订单 -->
+  <select id="getOrderByNumber" parameterType="String" resultMap="ConnectorMap">
+  	select
+  	<include refid="Connector_List" />
+  	from good_transport
+  	where good_order_number = #{goodOrderNumber}
+  </select>
+</mapper>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.GoodDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.GoodDetail" >
+    <id column="good_detail_id" property="goodDetailId" jdbcType="INTEGER" />
+    <result column="good_detail_name" property="goodDetailName" jdbcType="VARCHAR" />
+    <result column="good_detail_standard" property="goodDetailStandard" jdbcType="VARCHAR" />
+    <result column="good_detail_model" property="goodDetailModel" jdbcType="VARCHAR" />
+    <result column="good_detail_size" property="goodDetailSize" jdbcType="VARCHAR" />
+    <result column="good_detail_weight" property="goodDetailWeight" jdbcType="VARCHAR" />
+    <result column="good_detail_length" property="goodDetailLength" jdbcType="VARCHAR" />
+    <result column="good_detail_amount" property="goodDetailAmount" jdbcType="INTEGER" />
+    <result column="good_detail_value" property="goodDetailValue" jdbcType="DECIMAL" />
+    <result column="good_detail_pack_photo" property="goodDetailPackPhoto" jdbcType="VARCHAR" />
+    <result column="good_detail_primitive_photo" property="goodDetailPrimitivePhoto" jdbcType="VARCHAR" />
+    <result column="good_detail_insure_value" property="goodDetailInsureValue" jdbcType="DECIMAL" />
+    <result column="good_detail_wearing_status" property="goodDetailWearingStatus" jdbcType="INTEGER" />
+    <result column="good_detail_insure_status" property="goodDetailInsureStatus" jdbcType="INTEGER" />
+    <result column="good_order_number" property="goodOrderNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ImgResultMap" type="com.logistics.express.entity.GoodDetail" >
+    <result column="good_detail_pack_photo" property="goodDetailPackPhoto" jdbcType="VARCHAR" />
+    <result column="good_detail_primitive_photo" property="goodDetailPrimitivePhoto" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    good_detail_id, good_detail_name, good_detail_standard, good_detail_model, good_detail_size, 
+    good_detail_weight, good_detail_length, good_detail_amount, good_detail_value, 
+    good_detail_insure_value, good_detail_wearing_status, good_detail_insure_status
+  </sql>
+  <sql id="Img_List" >
+    good_detail_primitive_photo,good_detail_pack_photo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from good_detail
+    where good_detail_id = #{goodDetailId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="String" >
+    delete from good_detail
+    where good_order_number = #{goodOrderNumber,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.logistics.express.entity.GoodDetail" >
+    insert into good_detail (good_detail_id, good_detail_name, good_detail_standard, 
+      good_detail_model, good_detail_size, good_detail_weight, 
+      good_detail_length, good_detail_amount, good_detail_value, 
+      good_detail_insure_value, 
+      good_detail_wearing_status, good_detail_insure_status
+      )
+    values (#{goodDetailId,jdbcType=INTEGER}, #{goodDetailName,jdbcType=VARCHAR}, #{goodDetailStandard,jdbcType=VARCHAR}, 
+      #{goodDetailModel,jdbcType=VARCHAR}, #{goodDetailSize,jdbcType=VARCHAR}, #{goodDetailWeight,jdbcType=VARCHAR}, 
+      #{goodDetailLength,jdbcType=VARCHAR}, #{goodDetailAmount,jdbcType=INTEGER}, #{goodDetailValue,jdbcType=DECIMAL}, 
+      #{goodDetailInsureValue,jdbcType=DECIMAL}, 
+      #{goodDetailWearingStatus,jdbcType=INTEGER}, #{goodDetailInsureStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.GoodDetail" >
+    insert into good_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodDetailId != null" >
+        good_detail_id,
+      </if>
+      <if test="goodDetailName != null" >
+        good_detail_name,
+      </if>
+      <if test="goodDetailStandard != null" >
+        good_detail_standard,
+      </if>
+      <if test="goodDetailModel != null" >
+        good_detail_model,
+      </if>
+      <if test="goodDetailSize != null" >
+        good_detail_size,
+      </if>
+      <if test="goodDetailWeight != null" >
+        good_detail_weight,
+      </if>
+      <if test="goodDetailLength != null" >
+        good_detail_length,
+      </if>
+      <if test="goodDetailAmount != null" >
+        good_detail_amount,
+      </if>
+      <if test="goodDetailValue != null" >
+        good_detail_value,
+      </if>
+      <if test="goodDetailPackPhoto != null" >
+        good_detail_pack_photo,
+      </if>
+      <if test="goodDetailPrimitivePhoto != null" >
+        good_detail_primitive_photo,
+      </if>
+      <if test="goodDetailInsureValue != null" >
+        good_detail_insure_value,
+      </if>
+      <if test="goodDetailWearingStatus != null" >
+        good_detail_wearing_status,
+      </if>
+      <if test="goodDetailInsureStatus != null" >
+        good_detail_insure_status,
+      </if>
+      <if test="goodOrderNumber != null" >
+        good_order_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodDetailId != null" >
+        #{goodDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="goodDetailName != null" >
+        #{goodDetailName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailStandard != null" >
+        #{goodDetailStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailModel != null" >
+        #{goodDetailModel,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailSize != null" >
+        #{goodDetailSize,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailWeight != null" >
+        #{goodDetailWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailLength != null" >
+        #{goodDetailLength,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailAmount != null" >
+        #{goodDetailAmount,jdbcType=INTEGER},
+      </if>
+      <if test="goodDetailValue != null" >
+        #{goodDetailValue,jdbcType=DECIMAL},
+      </if>
+      <if test="goodDetailPackPhoto != null" >
+        #{goodDetailPackPhoto,jdbcType=VARCHAR},
+      </if>
+       <if test="goodDetailPrimitivePhoto != null" >
+        #{goodDetailPrimitivePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailInsureValue != null" >
+        #{goodDetailInsureValue,jdbcType=DECIMAL},
+      </if>
+      <if test="goodDetailWearingStatus != null" >
+        #{goodDetailWearingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodDetailInsureStatus != null" >
+        #{goodDetailInsureStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodOrderNumber != null" >
+        #{goodOrderNumber,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.GoodDetail" >
+    update good_detail
+    <set >
+      <if test="goodDetailName != null" >
+        good_detail_name = #{goodDetailName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailStandard != null" >
+        good_detail_standard = #{goodDetailStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailModel != null" >
+        good_detail_model = #{goodDetailModel,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailSize != null" >
+        good_detail_size = #{goodDetailSize,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailWeight != null" >
+        good_detail_weight = #{goodDetailWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailLength != null" >
+        good_detail_length = #{goodDetailLength,jdbcType=VARCHAR},
+      </if>
+      <if test="goodDetailAmount != null" >
+        good_detail_amount = #{goodDetailAmount,jdbcType=INTEGER},
+      </if>
+      <if test="goodDetailValue != null" >
+        good_detail_value = #{goodDetailValue,jdbcType=DECIMAL},
+      </if>
+      
+      <if test="goodDetailInsureValue != null" >
+        good_detail_insure_value = #{goodDetailInsureValue,jdbcType=DECIMAL},
+      </if>
+      <if test="goodDetailWearingStatus != null" >
+        good_detail_wearing_status = #{goodDetailWearingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="goodDetailInsureStatus != null" >
+        good_detail_insure_status = #{goodDetailInsureStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where good_detail_id = #{goodDetailId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.GoodDetail" >
+    update good_detail
+    set good_detail_name = #{goodDetailName,jdbcType=VARCHAR},
+      good_detail_standard = #{goodDetailStandard,jdbcType=VARCHAR},
+      good_detail_model = #{goodDetailModel,jdbcType=VARCHAR},
+      good_detail_size = #{goodDetailSize,jdbcType=VARCHAR},
+      good_detail_weight = #{goodDetailWeight,jdbcType=VARCHAR},
+      good_detail_length = #{goodDetailLength,jdbcType=VARCHAR},
+      good_detail_amount = #{goodDetailAmount,jdbcType=INTEGER},
+      good_detail_value = #{goodDetailValue,jdbcType=DECIMAL},
+    
+      good_detail_insure_value = #{goodDetailInsureValue,jdbcType=DECIMAL},
+      good_detail_wearing_status = #{goodDetailWearingStatus,jdbcType=INTEGER},
+      good_detail_insure_status = #{goodDetailInsureStatus,jdbcType=INTEGER}
+    where good_detail_id = #{goodDetailId,jdbcType=INTEGER}
+  </update>
+  <!-- 根据订单号获取货物细节信息 -->
+  <select id="getGoodDetailByOrder" parameterType="String" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from good_detail
+    where good_order_number = #{goodOrderNumber}
+  </select>
+  <!-- 根据订单号获取图片路径 -->
+  <select id="getImgByOrder" parameterType="String" resultMap="ImgResultMap">
+  	select
+  	good_detail_primitive_photo,good_detail_pack_photo
+  	from good_detail
+  	where good_order_number = #{goodOrderNumber}
+  </select>
+</mapper>

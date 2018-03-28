@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logistics.express.dao.TransportStatueMapper" >
+  <resultMap id="BaseResultMap" type="com.logistics.express.entity.TransportStatue" >
+    <id column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="plate_num" property="plateNum" jdbcType="VARCHAR" />
+    <result column="car_statue" property="carStatue" jdbcType="INTEGER" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="lng" property="lng" jdbcType="DOUBLE" />
+    <result column="lat" property="lat" jdbcType="DOUBLE" />
+    <result column="now_location" property="nowLocation" jdbcType="VARCHAR" />
+    <result column="begin_location" property="beginLocation" jdbcType="VARCHAR" />
+    <result column="goal_location" property="goalLocation" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    driver_id, plate_num, car_statue, last_time, lng, lat, now_location, begin_location, 
+    goal_location
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from transport_statue
+    where driver_id = #{driverId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from transport_statue
+    where driver_id = #{driverId,jdbcType=INTEGER}
+  </delete>
+ 
+  <insert id="insert" parameterType="com.logistics.express.entity.TransportStatue" >
+    insert into transport_statue (driver_id, plate_num, car_statue, 
+      last_time, lng, lat, 
+      now_location, begin_location, goal_location
+      )
+    values (#{driverId,jdbcType=INTEGER}, #{plateNum,jdbcType=VARCHAR}, #{carStatue,jdbcType=INTEGER}, 
+      #{lastTime,jdbcType=TIMESTAMP}, #{lng,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE}, 
+      #{nowLocation,jdbcType=VARCHAR}, #{beginLocation,jdbcType=VARCHAR}, #{goalLocation,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.logistics.express.entity.TransportStatue" >
+    insert into transport_statue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="driverId != null" >
+        driver_id,
+      </if>
+      <if test="plateNum != null" >
+        plate_num,
+      </if>
+      <if test="carStatue != null" >
+        car_statue,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="nowLocation != null" >
+        now_location,
+      </if>
+      <if test="beginLocation != null" >
+        begin_location,
+      </if>
+      <if test="goalLocation != null" >
+        goal_location,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="plateNum != null" >
+        #{plateNum,jdbcType=VARCHAR},
+      </if>
+      <if test="carStatue != null" >
+        #{carStatue,jdbcType=INTEGER},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="nowLocation != null" >
+        #{nowLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="beginLocation != null" >
+        #{beginLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="goalLocation != null" >
+        #{goalLocation,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.logistics.express.entity.TransportStatue" >
+    update transport_statue
+    <set >
+      <if test="plateNum != null" >
+        plate_num = #{plateNum,jdbcType=VARCHAR},
+      </if>
+      <if test="carStatue != null" >
+        car_statue = #{carStatue,jdbcType=INTEGER},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="nowLocation != null" >
+        now_location = #{nowLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="beginLocation != null" >
+        begin_location = #{beginLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="goalLocation != null" >
+        goal_location = #{goalLocation,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where driver_id = #{driverId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.logistics.express.entity.TransportStatue" >
+    update transport_statue
+    set plate_num = #{plateNum,jdbcType=VARCHAR},
+      car_statue = #{carStatue,jdbcType=INTEGER},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      lng = #{lng,jdbcType=DOUBLE},
+      lat = #{lat,jdbcType=DOUBLE},
+      now_location = #{nowLocation,jdbcType=VARCHAR},
+      begin_location = #{beginLocation,jdbcType=VARCHAR},
+      goal_location = #{goalLocation,jdbcType=VARCHAR}
+    where driver_id = #{driverId,jdbcType=INTEGER}
+  </update>
+</mapper>
