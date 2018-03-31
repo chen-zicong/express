@@ -59,12 +59,12 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	<!-- 配置spring的PlatformTransactionManager，名字为默认值 -->  
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
-        <property name="dataSource" ref="dataSource" />  
-    </bean>  
-      
-    <!-- 开启事务控制的注解支持 -->  
+	<!-- 配置spring的PlatformTransactionManager，名字为默认值 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 开启事务控制的注解支持 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 	
 </beans>

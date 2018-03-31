@@ -32,4 +32,5 @@ public interface GoodTransportProcessService {
 	//根据单号获取运输信息
 	public GoodTransportProcess getProcessByOrder(String goodOrderNumber);
 
+
 }

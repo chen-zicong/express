@@ -133,7 +133,7 @@
     where good_transport_driver_id = #{driverId} and audite_status = 1
   </select>
   <!-- 根据订单号获取运输信息 -->
-  <select id="getProcessByOrder" parameterType="String" resultMap="BaseResultMap">
+  <select id="getProcessByOrder" parameterType="string" resultMap="BaseResultMap">
   	select
   	<include refid="Base_Column_List" />
     from good_transport_process

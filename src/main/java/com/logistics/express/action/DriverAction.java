@@ -21,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.logistics.express.entity.Admin;
 import com.logistics.express.entity.ApiResponse;
 import com.logistics.express.entity.Driver;
-import com.logistics.express.entity.GoodDetail;
 import com.logistics.express.service.DriverService;
 import com.logistics.express.service.TransportCompanyService;
 
@@ -50,8 +48,9 @@ public class DriverAction {
 	@RequestMapping(value="getDriver",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> getDriverList(int page,int rows,int status,String driverName){
-		Map<String,Object> jo = new HashMap();
+		Map<String,Object> jo = new HashMap<>();
 		Map<String,Object> map = new HashMap<>();
+		System.out.println(page+"-----"+rows+"-----"+status);
 		//司机名字为空则为分页查询数据
 		if(driverName == null || driverName.isEmpty()){
 			//分页查询
@@ -93,7 +92,7 @@ public class DriverAction {
 			jo.put("total",driverList.size());
 			jo.put("rows",driverList);
 		}
-		
+
 		return jo;
 	}
 	
@@ -146,7 +145,7 @@ public class DriverAction {
 		//封装司机身份证照片路径
 		driver.setDriverIdPic(uploadFiles(driverIdpic,request));
 		try{
-			if(comid != null && comid != ""){//公司id不为空表示为公司录入司机
+			if(comid != null && !comid.equals("")){//公司id不为空表示为公司录入司机
 				driver.setComId(Integer.parseInt(comid));
 				driver.setStatus(1);//若公司录入司机则无需审核,为1为审核通过
 			}else{
@@ -159,7 +158,7 @@ public class DriverAction {
 			}
 		}catch(Exception e){
 			logger.error("注册或录入司机时出现异常", e);
-			apiResponse = new ApiResponse(-1,"未知错误");
+			apiResponse = new ApiResponse(-1,"未知错误"+e.getLocalizedMessage());
 		}
 		return apiResponse;
 	}
@@ -167,7 +166,7 @@ public class DriverAction {
 	//上传图片并返回图片路径
 	public String uploadFiles(MultipartFile[] files,HttpServletRequest request){
 		//上传路径
-		String imgUploadUrl = "/express/"+"upload/files/driver/";
+		String imgUploadUrl = "/upload/files/driver/";
 		StringBuilder sb = new StringBuilder();
 		if(files != null && files.length > 0){
 			for(int i = 0; i < files.length; i ++){
@@ -192,8 +191,8 @@ public class DriverAction {
 	 */
 	public boolean saveFile(MultipartFile file,HttpServletRequest request) {  
 		//保存到服务器的路径
-		String bootUrl="/usr";//保存的根目录
-        String uploadUrl="/express/"+"upload/files/driver";
+		String bootUrl="/usr/local/tomcat7/webapps";//保存的根目录
+        String uploadUrl="/upload/files/driver";
         String savedirpath = bootUrl + uploadUrl;
         if (!file.isEmpty()) {  
             try {  
@@ -259,14 +258,14 @@ public class DriverAction {
 	 */
 	@RequestMapping(value="getImg",method=RequestMethod.POST)
 	@ResponseBody
-	public ApiResponse getImgByOrder(int id,HttpServletRequest request){
-		ApiResponse apiResponse = null;
+	public ApiResponse<String[]> getImgByOrder(int id, HttpServletRequest request){
+		ApiResponse<String[]> apiResponse = null;
 		String img = driverService.getImgById(id);
 		if(img != null && img != "" && img.length() != 0){
 			String[] imgUrl = getImgUrl(img,request);
-			apiResponse = new ApiResponse(1,imgUrl,"获取成功");
+			apiResponse = new ApiResponse<>(1,imgUrl,"获取成功");
 		}else{
-			apiResponse = new ApiResponse(0,"无图片");
+			apiResponse = new ApiResponse<String[]>(0,"无图片");
 		}
 		return apiResponse;
 	}

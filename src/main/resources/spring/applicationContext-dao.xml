@@ -23,7 +23,7 @@
 	<!-- Hikari Datasource 连接池配置-->  
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"  destroy-method="shutdown">  
 		<property name="driverClassName" value="${jdbc.driver}" /> <!-- 无需指定，除非系统无法自动识别 -->  
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/express?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true" />
+		<property name="jdbcUrl" value="jdbc:mysql://118.190.209.162:3306/express?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true" />
 		<property name="username" value="${jdbc.username}" />  
 		<property name="password" value="${jdbc.password}" />  
 		 <!-- 连接只读数据库时配置为true， 保证安全 -->  
@@ -35,7 +35,7 @@
 		<!-- 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL wait_timeout参数（show variables like '%timeout%';） -->  
 		<property name="maxLifetime" value="1800000" />  
 		<!-- 连接池中允许的最大连接数。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count) -->  
-		<property name="maximumPoolSize" value="10" />  
+		<property name="maximumPoolSize" value="10	" />
 	</bean>  
 	<!-- Hikari Datasource end-->  
 	
