@@ -76,7 +76,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 	</div>
     <script type="text/javascript">
-		$(function(){
+		$(function(){console.log('2',2);
 		$("#meeting").datagrid({
 			width:1200,
 			url:"${proPath }" + '/express/driver/getDriver',
@@ -90,12 +90,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				{field:'plateNumber',title:'车牌号',width:20},
 				{field:'carType',title:'运输车类型',width:20}
 			]],
-			pagination:true,
+			pagination:true,  /*底部显示分页工具栏*/
 			fitColumns:true,
 			toolbar:"#meetingTb",
 			queryParams: {
 			    	status:'1'
-				}, 
+				},               /*当请求远程数据时，发送的额外参数。 */
 		});
 	});
 	
@@ -184,6 +184,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			status:'1',
 			driverName:driverName
 		});
+		console.log('1',1);
+
 	})
 	
 	//查询按钮的点击触发事件

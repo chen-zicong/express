@@ -23,11 +23,11 @@
 	<!-- Hikari Datasource 连接池配置-->  
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"  destroy-method="shutdown">  
 		<property name="driverClassName" value="${jdbc.driver}" /> <!-- 无需指定，除非系统无法自动识别 -->  
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/express?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true" />
+		<property name="jdbcUrl" value="jdbc:mysql://118.190.209.162:3306/express?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true" />
 		<property name="username" value="${jdbc.username}" />  
 		<property name="password" value="${jdbc.password}" />  
 		 <!-- 连接只读数据库时配置为true， 保证安全 -->  
-		<property name="readOnly" value="false" />  
+		<property name="readOnly" value="false" />
 		<!-- 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 -->  
 		<property name="connectionTimeout" value="30000" />  
 		<!-- 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 -->  

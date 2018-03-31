@@ -42,6 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<a class="easyui-linkbutton" onclick="process.detailWin()" iconCls="icon-table-row-delete" plain='true'>查看货物详情</a>
 		<a class="easyui-linkbutton" onclick="process.getImg(1)" iconCls="icon-search" plain='true'>查看货物原始图片</a>
 		<a class="easyui-linkbutton" onclick="process.getImg(2)" iconCls="icon-search" plain='true'>查看货物包装图片</a>
+		<a class="easyui-linkbutton" onclick="process.updatetp()" iconCls="icon-edit" plain='true'>编辑订单信息</a>
 		订单号 ：&nbsp<input id="goodOrderNumber" type="text" style="width:150px"/>
 		<a id="search" style="margin-left: 20px;" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>	
 	</div>
@@ -74,7 +75,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="imgWindow" class="easyui-window" title="货物图片" modal="true" data-options="iconCls:'icon-save'" style="top:0px;width:550px;height:500px;padding:5px;" closed="true">
 		
 	</div>
-    <script type="text/javascript">
+
+	<div id="updatetp" class="easyui-window" title="更新货物运输详情" modal="true" data-options="iconCls:'icon-save'" style="top:20px;width:450px;height:360px;padding-top:20px;" closed="true">
+
+		<table align="center" width="400" border="0" cellspacing="20" >
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">当前运输时间:</span></th>
+				<td><input  style="height:30px;width:200px;font-size:20px" type="text" name="goodTransportProcessTime" id="goodTransportProcessTime" /></td>
+			</tr>
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">当前到达位置:</span></th>
+				<td><input  style="height:30px;width:200px;font-size:20px" type="text" name="goodTransportProcessPosition" id="goodTransportProcessPosition" /></td>
+			</tr>
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">运输司机姓名:</span></th>
+				<td><input  style="height:30px;width:200px;font-size:20px" type="text" name="driverName" id="driverName" /></td>
+			</tr>
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">运输司机手机:</span></th>
+				<td><input  style="height:30px;width:200px;font-size:20px" type="text" name="driverPhone" id="driverPhone" /></td>
+			</tr>
+		</table>
+		<div style="margin-top:50px;margin-bottom:50px">
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="margin-right:100px;margin-left:100px" onclick="tpupdate()">确定</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#updatetp').window('close')">取消</a>
+		</div>
+	</div>
+
+
+
+	<script type="text/javascript">
 		//var TreeId='<%=session.getAttribute("loginTreeId")%>';
 		$(function(){
 		$("#meeting").datagrid({
@@ -148,7 +178,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				   type: "POST",
 				   url: "/express/good/getGoodDetail",
 				   data: {
-					   goodOrderNumber:goodOrderNumber,
+					   goodOrderNumber:goodOrderNumber
 				   },
 				   success: function(data){
 				   		if(data["status"] == 1){
@@ -166,7 +196,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			   }
 			});	
 			
+		},
+
+		//更新货物运输过程信息
+		updatetp:function () {
+            if($(".datagrid-row-selected").size()==0){
+                $.messager.alert('警告','请选择一项进行操作');
+                return;
+            }else if($(".datagrid-row-selected").size()>1){
+                $.messager.alert('警告','请只选择一项进行操作');
+                return;
+            }
+            var goodTransportProcessTime = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodTransportProcessTime")).text();
+            var goodTransportProcessPosition = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodTransportProcessPosition")).text();
+            var driverName = $(".datagrid-row-selected").find($(".datagrid-cell-c1-driverName")).text();
+            var driverPhone = $(".datagrid-row-selected").find($(".datagrid-cell-c1-driverPhone")).text();
+            $('#goodTransportProcessTime').val(goodTransportProcessTime);
+            $('#goodTransportProcessPosition').val(goodTransportProcessPosition);
+            $('#driverName').val(driverName);
+            $('#driverPhone').val(driverPhone);
+            $("#updatetp").window('open');
+
+
 		}
+
+
 	}
 	
 	//查询按钮的点击触发事件
@@ -177,6 +231,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			auditeStatus:1
 		});
 	})
+
+       /* //更新货物运输过程信息
+        tpupdate:function(){
+            var goodOrderNumber  = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
+            var goodTransportProcessTime = $('#goodTransportProcessTime').val();
+            var goodTransportProcessPosition = $('#goodTransportProcessPosition').val();
+            var driverName = $('#driverName').val();
+            var driverPhone = $("#driverPhone").val();
+            $.ajax({
+                type: "POST",
+                url: "/express/good/updateGoodPay",
+                data: {
+                    goodOrderNumber:goodOrderNumber,
+                    goodTransportProcessTime:goodTransportProcessTime,
+                    goodTransportProcessPosition:goodTransportProcessPosition,
+                    driverName:driverName,
+                    driverPhone:driverPhone
+                },
+                success: function(data){
+                    if(data["status"] == 1){
+                        alert("操作成功");
+                        window.location.reload();
+                    }else{
+                        alert(data["message"]);
+                        window.location.reload();
+                    }
+                }
+            });
+        }*/
+
   	</script>
 </body>
 </html>
