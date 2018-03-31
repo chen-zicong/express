@@ -720,28 +720,27 @@ public class GoodAction {
     @RequestMapping(value = "addGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     // @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<StringBuilder> AddGoodTransportProcessPosition(List<String> positionList, String orderNumber) {
+    public ApiResponse<StringBuilder> AddGoodTransportProcessPosition(PositionList positionList) {
         ApiResponse<StringBuilder> response = null;
         GoodTransportProcess goodTransportProcess = new GoodTransportProcess();
-
+        List<String> list = positionList.getPositionList();
         StringBuilder builder = new StringBuilder();
-        for (String aPositionList : positionList) {
+        for (String aPositionList : list) {
             builder.append(aPositionList).append(",");
         }
-        builder.append(positionList.get(positionList.size()));
+        builder.append(list.get(list.size()));
         goodTransportProcess.setGoodTransportProcessPosition(builder.toString());  //拼接成String放入数据库
-        goodTransportProcess.setGoodOrderNumber(orderNumber); //设置订单号  ,便于查询
+        goodTransportProcess.setGoodOrderNumber(positionList.getOrderNumber()); //设置订单号  ,便于查询
         goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
         response = new ApiResponse<>(1, "成功");
         return response;
     }
 
 
-
     @Transactional
     @RequestMapping(value = "TestAddGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
-   @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
+    @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
     public ApiResponse<StringBuilder> TestAddGoodTransportProcessPosition(String positionList, String orderNumber) {
         ApiResponse<StringBuilder> response = null;
         GoodTransportProcess goodTransportProcess = new GoodTransportProcess();
@@ -753,18 +752,6 @@ public class GoodAction {
         response = new ApiResponse<>(1, "成功");
         return response;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
