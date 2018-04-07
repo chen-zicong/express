@@ -720,21 +720,24 @@ public class GoodAction {
     @RequestMapping(value = "addGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     // @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<StringBuilder> AddGoodTransportProcessPosition(PositionList positionList) {
-        ApiResponse<StringBuilder> response = null;
+    public ApiResponse<PositionList> AddGoodTransportProcessPosition(PositionList positionList) {
+        ApiResponse<PositionList> response = null;
         GoodTransportProcess goodTransportProcess = new GoodTransportProcess();
-        List<String> list = positionList.getPositionList();
+
+        String[] cities = positionList.getCities();
         StringBuilder builder = new StringBuilder();
-        for (String aPositionList : list) {
+        for (String aPositionList : cities) {
             builder.append(aPositionList).append(",");
         }
-        builder.append(list.get(list.size()));
+        builder.append(cities[cities.length-1]);
         goodTransportProcess.setGoodTransportProcessPosition(builder.toString());  //拼接成String放入数据库
         goodTransportProcess.setGoodOrderNumber(positionList.getOrderNumber()); //设置订单号  ,便于查询
-        goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
-        response = new ApiResponse<>(1, "成功");
+       // goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
+        response = new ApiResponse<PositionList>(1, positionList,"成功");
         return response;
     }
+
+
 
 
     @Transactional
@@ -761,8 +764,9 @@ public class GoodAction {
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
     public ApiResponse<List<GoodTransportProcessPosition>> getGoodTransportProcessPosition(String orderNumber) {
-
+        Date time = new Date();
         ApiResponse<List<GoodTransportProcessPosition>> response = null;
+
         GoodTransportProcess processByOrder = goodTransportProcessService.getProcessByOrder(orderNumber);
         if (processByOrder == null) {
             response = new ApiResponse<>(0, "查询失败");
@@ -781,14 +785,15 @@ public class GoodAction {
             String distanceL = distance / 1000 + " 公里";
             processPosition.setLocation(startLocal);
             processPosition.setMessage(startLocal + "和" + endLocal + "之间的行驶距离为" + distanceL);
-            Date time = new Date();
-            String date = DateUnti.dateToStr(time);
+            String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
             processPosition.setDate(date);
             positionList.add(processPosition);
         }
         GoodTransportProcessPosition processPosition = new GoodTransportProcessPosition();
         processPosition.setLocation(positions[positions.length - 1]);
         processPosition.setMessage("到达" + positions[positions.length - 1]);
+        String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
+        processPosition.setDate(date);
         response = new ApiResponse<>(1, positionList, "位置信息列表");
         positionList.add(processPosition);
         return response;

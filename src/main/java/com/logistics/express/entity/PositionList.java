@@ -3,8 +3,8 @@ package com.logistics.express.entity;
 import java.util.List;
 
 public class PositionList {
-    private List<String> positionList;
-    private  String orderNumber;
+
+    private String orderNumber;
 
     public String getOrderNumber() {
         return orderNumber;
@@ -14,11 +14,15 @@ public class PositionList {
         this.orderNumber = orderNumber;
     }
 
-    public List<String> getPositionList() {
-        return positionList;
+    private String[] cities;
+
+    public String[] getCities() {
+        return cities;
     }
 
-    public void setPositionList(List<String> positionList) {
-        this.positionList = positionList;
+    public void setCities(String[] cities) {
+        this.cities = cities;
     }
+
+
 }

@@ -28,7 +28,7 @@ import com.logistics.express.entity.TextMessage;
 
 public class WeChatController extends HttpServlet{
 	
-	private final String token="beamgod";
+	private final String token="tokencheck";
 	@Resource
 	private WeChatService wechatService;
 	

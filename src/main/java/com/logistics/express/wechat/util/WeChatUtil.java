@@ -52,10 +52,10 @@ import com.logistics.express.entity.TextMessage;
 
 public class WeChatUtil {
 
-    // private static final String APPID="wx6a6fb29fafbb8255";
-    //   private static final String APPSECRET="3712865442aee5ae623a3b24223d0533";
-    private static final String APPID = "wxdc9fecea689cd801";
-    private static final String APPSECRET = "a1408ff1e5231e90ec60e3d9a3311106";
+    private static final String APPID="wx6a6fb29fafbb8255";
+      private static final String APPSECRET="3712865442aee5ae623a3b24223d0533";
+  //  private static final String APPID = "wxdc9fecea689cd801";
+  //  private static final String APPSECRET = "a1408ff1e5231e90ec60e3d9a3311106";
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
     private static final String CREAT_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
     private static final String POST_FOR_OPENID_ONE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APPID + "&redirect_uri=";
@@ -132,6 +132,7 @@ public class WeChatUtil {
             is.read(jsonSize);
             String js = new String(jsonSize, "UTF-8");
             json = (JSONObject) JSONObject.parse(js);
+            System.out.println(js);
             access_taken.setToken(json.getString("access_token"));
             access_taken.setTimeString(format.format(date));
             //access_taken.setExpiresIn(json.getInteger("expires_in"));
