@@ -6,6 +6,8 @@ public class PositionList {
 
     private String orderNumber;
 
+    private String[] cities;
+
     public String getOrderNumber() {
         return orderNumber;
     }
@@ -14,8 +16,6 @@ public class PositionList {
         this.orderNumber = orderNumber;
     }
 
-    private String[] cities;
-
     public String[] getCities() {
         return cities;
     }
@@ -23,6 +23,4 @@ public class PositionList {
     public void setCities(String[] cities) {
         this.cities = cities;
     }
-
-
 }

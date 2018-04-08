@@ -42,6 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<a class="easyui-linkbutton" onclick="process.detailWin()" iconCls="icon-table-row-delete" plain='true'>查看货物详情</a>
 		<a class="easyui-linkbutton" onclick="process.getImg(1)" iconCls="icon-search" plain='true'>查看货物原始图片</a>
 		<a class="easyui-linkbutton" onclick="process.getImg(2)" iconCls="icon-search" plain='true'>查看货物包装图片</a>
+		<a class="easyui-linkbutton" onclick="process.updatetp()" iconCls="icon-edit" plain='true'>编辑订单信息</a>
 		订单号 ：&nbsp<input id="goodOrderNumber" type="text" style="width:150px"/>
 		<a id="search" style="margin-left: 20px;" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>	
 	</div>
@@ -74,7 +75,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="imgWindow" class="easyui-window" title="货物图片" modal="true" data-options="iconCls:'icon-save'" style="top:0px;width:550px;height:500px;padding:5px;" closed="true">
 		
 	</div>
-    <script type="text/javascript">
+
+	<div id="updatetp" class="easyui-window" title="更新货物运输详情" modal="true" data-options="iconCls:'icon-save'" style="top:20px;width:600px;height:360px;padding-top:20px;" closed="true">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addpositions()"style="margin-left: 450px;">添加地理位置</a>
+		<table  id="tb" align="center" width="550" border="0" cellspacing="20" >
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">货物订单号:</span></th>
+				<td><input  style="height:30px;width:300px;font-size:20px" type="text" name="goodOrderNumber" id="goodOrderNumbers" /></td>
+			</tr>
+			<tr>
+				<th align="right" style="margin-right:20px"><span style="font-size:16px">当前的位置:</span></th>
+				<td><input  style="height:30px;width:300px;font-size:20px" type="text" name="goodTransportProcessPosition" id="goodTransportProcessPosition" placeholder="输入所经过的城市"/></td>
+			</tr>
+
+		</table>
+		<div style="margin-top:50px;margin-bottom:50px">
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="margin-right:100px;margin-left:100px" onclick="saveposition()">确定</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#updatetp').window('close')">取消</a>
+		</div>
+	</div>
+
+
+
+	<script type="text/javascript">
+
 		//var TreeId='<%=session.getAttribute("loginTreeId")%>';
 		$(function(){
 		$("#meeting").datagrid({
@@ -95,79 +119,127 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	auditeStatus:1
 				}, 
 		});
-	});
-	
-	var process = {
-		//查看图片
-		getImg:function(type){
-			if($(".datagrid-row-selected").size()==0){
-				$.messager.alert('警告','请选择一项进行查看');
-				return;
-			}else if($(".datagrid-row-selected").size()>1){
-				$.messager.alert('警告','请只选择一项进行查看');
-				return;
-			}
-			var goodOrderNumber  = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
-			$.ajax({
-				   type: "POST",
-				   url: "/express/good/getImg",
-				   data: {
-					   goodOrderNumber:goodOrderNumber,
-					   type:type
-				   },
-				   success: function(data){
-				   		if(data["status"] == 1){
-						alert("操作成功");
-						$("#imgWindow").empty();
-						for(var i=0;i<data["data"].length;i++){
-				   			var img = "<img style='width:530px;height:470px' src='"+data["data"][i]+"'>";
-				   			$("#imgWindow").append(img);
-				   		}
-				   		$("#imgWindow").window("open");
-						//window.location.reload();
-				   	}else{
-						alert(data["message"]);
 
-				   	}
-			   }
-			});	
-		},
-		
-		//查看货物详情窗口
-		detailWin:function(){
-			var goodDetail = "";
-			if($(".datagrid-row-selected").size()==0){
-				$.messager.alert('警告','请选择一项进行操作');
-				return;
-			}else if($(".datagrid-row-selected").size()>1){
-				$.messager.alert('警告','请只选择一项进行操作');
-				return;
-			}
-			var goodOrderNumber  = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
-			$.ajax({
-				   type: "POST",
-				   url: "/express/good/getGoodDetail",
-				   data: {
-					   goodOrderNumber:goodOrderNumber,
-				   },
-				   success: function(data){
-				   		if(data["status"] == 1){
-				   		goodDetail = data["data"];
-				   		$("#goodDetailName").val(goodDetail["goodDetailName"]);
-				   		$("#goodDetailSize").val(goodDetail["goodDetailSize"]);
-				   		$("#goodDetailWeight").val(goodDetail["goodDetailWeight"]);
-				   		$("#goodDetailAmount").val(goodDetail["goodDetailAmount"]);
-				   		$("#goodDetailValue").val(goodDetail["goodDetailValue"]);
-				   		$("#detailWin").window('open');
-				   	}else{
-						alert(data["message"]);
-						window.location.reload();
-				   	}
-			   }
-			});	
-			
+
+	});
+	var process = {
+        //查看图片
+        getImg: function (type) {
+            if ($(".datagrid-row-selected").size() == 0) {
+                $.messager.alert('警告', '请选择一项进行查看');
+                return;
+            } else if ($(".datagrid-row-selected").size() > 1) {
+                $.messager.alert('警告', '请只选择一项进行查看');
+                return;
+            }
+            var goodOrderNumber = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
+            $.ajax({
+                type: "POST",
+                url: "/express/good/getImg",
+                data: {
+                    goodOrderNumber: goodOrderNumber,
+                    type: type
+                },
+                success: function (data) {
+                    if (data["status"] == 1) {
+                        alert("操作成功");
+                        $("#imgWindow").empty();
+                        for (var i = 0; i < data["data"].length; i++) {
+                            var img = "<img style='width:530px;height:470px' src='" + data["data"][i] + "'>";
+                            $("#imgWindow").append(img);
+                        }
+                        $("#imgWindow").window("open");
+                        //window.location.reload();
+                    } else {
+                        alert(data["message"]);
+
+                    }
+                }
+            });
+        },
+
+        //查看货物详情窗口
+        detailWin: function () {
+            var goodDetail = "";
+            if ($(".datagrid-row-selected").size() == 0) {
+                $.messager.alert('警告', '请选择一项进行操作');
+                return;
+            } else if ($(".datagrid-row-selected").size() > 1) {
+                $.messager.alert('警告', '请只选择一项进行操作');
+                return;
+            }
+            var goodOrderNumber = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
+            $.ajax({
+                type: "POST",
+                url: "/express/good/getGoodDetail",
+                data: {
+                    goodOrderNumber: goodOrderNumber
+                },
+                success: function (data) {
+                    if (data["status"] == 1) {
+                        goodDetail = data["data"];
+                        $("#goodDetailName").val(goodDetail["goodDetailName"]);
+                        $("#goodDetailSize").val(goodDetail["goodDetailSize"]);
+                        $("#goodDetailWeight").val(goodDetail["goodDetailWeight"]);
+                        $("#goodDetailAmount").val(goodDetail["goodDetailAmount"]);
+                        $("#goodDetailValue").val(goodDetail["goodDetailValue"]);
+                        $("#detailWin").window('open');
+                    } else {
+                        alert(data["message"]);
+                        window.location.reload();
+                    }
+                }
+            });
+
+        },
+
+        //更新货物运输过程信息
+        updatetp: function () {
+            if ($(".datagrid-row-selected").size() == 0) {
+                $.messager.alert('警告', '请选择一项进行操作');
+                return;
+            } else if ($(".datagrid-row-selected").size() > 1) {
+                $.messager.alert('警告', '请只选择一项进行操作');
+                return;
+            }
+
+            var goodOrderNumber = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
+            var goodTransportProcessPosition = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodTransportProcessPosition")).text();
+            $('#goodOrderNumbers').val(goodOrderNumber);
+            $('#goodTransportProcessPosition').val(goodTransportProcessPosition);
+
+			$("#updatetp").window('open');
+
+
+
+
+        }
+
+
+    };
+      //初始化货物运输过程地址
+       function init(positions_list) {
+          for(var i=0;i<positions_list.length;i++){
+              var tpl='<tr>'+
+                  '<th align="right" style="margin-right:20px"><span style="font-size:16px">当前的位置:</span></th>'+
+                  '<td><input  style="height:30px;width:300px;font-size:20px" type="text" name="goodTransportProcessPosition" id="goodTransportProcessPosition" value="'+positions_list[i]+'"/></td>'+
+                  '</tr>';
+              $("#tb").append(tpl);
+		  }
+
+       }
+
+   //添加位置框
+    function addpositions() {
+	    var tpl='<tr>'+
+           '<th align="right" style="margin-right:20px"><span style="font-size:16px">当前的位置:</span></th>'+
+           '<td><input  style="height:30px;width:300px;font-size:20px" type="text" name="goodTransportProcessPosition" id="goodTransportProcessPosition" /></td>'+
+               '</tr>';
+	       $("#tb").append(tpl);
 		}
-	}
+
+
+
 	
 	//查询按钮的点击触发事件
 	$("#search").click(function(){
@@ -177,6 +249,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			auditeStatus:1
 		});
 	})
+
+     //更新货物运输过程信息
+        function saveposition(){
+             //存放临时地址的数组
+             var temporary_positions=[];
+            var goodOrderNumber  = $("#goodOrderNumbers").val();
+
+            var lengths=$("#tb").find("tr").length;
+            for(var i=1;i<lengths;i++){
+                var temporary_position=$("#tb").find("tr").eq(i).find("input").val();
+                temporary_positions.push(temporary_position);
+			}console.log(temporary_positions);
+            if(temporary_positions!=null){
+              $.ajax({
+                type: "POST",
+                url: "/express/good/addGoodTransportProcessPosition",
+				traditional:true,
+                data: {
+                    orderNumber:goodOrderNumber,
+                    cities:temporary_positions
+
+
+                },
+                success: function(data){
+                    if(data["status"] == 1){
+                        alert("操作成功");
+                        window.location.reload();
+                    }else{
+                        alert(data["message"]);
+                        window.location.reload();
+                    }
+                }
+            })
+            }
+        }
+
   	</script>
 </body>
 </html>

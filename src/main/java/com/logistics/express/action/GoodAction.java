@@ -734,7 +734,7 @@ public class GoodAction {
         builder.append(cities[cities.length-1]);
         goodTransportProcess.setGoodTransportProcessPosition(builder.toString());  //拼接成String放入数据库
         goodTransportProcess.setGoodOrderNumber(positionList.getOrderNumber()); //设置订单号  ,便于查询
-       // goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
+     goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
         response = new ApiResponse<PositionList>(1, positionList,"成功");
         return response;
     }
