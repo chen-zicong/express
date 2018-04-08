@@ -18,12 +18,12 @@ public interface ConsignorMapper {
     int updateByPrimaryKeySelective(Consignor record);
 
     int updateByPrimaryKey(Consignor record);
-    
-    Consignor getConsignorMsg(Map<String,Object> map);
-    
-    List<Consignor> getConsignorList(Map<String,Object> map);
-    
+
+    Consignor getConsignorMsg(Map<String, Object> map);
+
+    List<Consignor> getConsignorList(Map<String, Object> map);
+
     int getConsignorCount();
-    
+
     List<Consignor> getConsignorByName(String consignorName);
 }

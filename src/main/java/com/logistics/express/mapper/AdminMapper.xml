@@ -105,7 +105,7 @@
   	where admin_phone = #{adminPhone}
   </update>
   <!-- 根据手机号查询管理员 -->
-  <select id="getAdminByPhone" parameterType="String" resultMap="BaseResultMap">
+  <select id="getAdminByPhone" parameterType="string" resultMap="BaseResultMap">
   	select 
   	<include refid="Base_Column_List" />
     from admin

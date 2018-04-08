@@ -1,6 +1,8 @@
 package com.logistics.express.unity;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 public class DateUnti {
 	
@@ -125,4 +127,11 @@ public class DateUnti {
 	    public static String dateToStr(Date date) {
 	        return dateToStr(date, "yyyy/MM/dd");
 	    }
+
+
+	    public static String LocalDateTimeToStr(LocalDateTime localDateTime){
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			String format = localDateTime.format(formatter);
+			return  format;
+		}
 	}
