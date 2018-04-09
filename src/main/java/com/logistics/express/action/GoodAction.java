@@ -3,6 +3,7 @@ package com.logistics.express.action;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -726,32 +727,32 @@ public class GoodAction {
 
         String[] cities = positionList.getCities();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i <cities.length-1 ; i++) {
+        for (int i = 0; i < cities.length - 1; i++) {
             builder.append(cities[i]).append(",");
         }
 
 
-        builder.append(cities[cities.length-1]);
+        builder.append(cities[cities.length - 1]);
         goodTransportProcess.setGoodTransportProcessPosition(builder.toString());  //拼接成String放入数据库
         goodTransportProcess.setGoodOrderNumber(positionList.getOrderNumber()); //设置订单号  ,便于查询
-     goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
-        response = new ApiResponse<PositionList>(1, positionList,"成功");
+
+       goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
+        response = new ApiResponse<PositionList>(1, positionList, "成功");
+
         return response;
     }
-
-
-
-
 
 
     /**
      * 获取位置信息
      */
+
     @RequestMapping(value = "getGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
     public ApiResponse<List<GoodTransportProcessPosition>> getGoodTransportProcessPosition(String orderNumber) {
-        Date time = new Date();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        GoodTransportProcessPosition processPosition = null;
         ApiResponse<List<GoodTransportProcessPosition>> response = null;
 
         GoodTransportProcess processByOrder = goodTransportProcessService.getProcessByOrder(orderNumber);
@@ -762,31 +763,36 @@ public class GoodAction {
         String position = processByOrder.getGoodTransportProcessPosition();
         String[] positions = position.split(",");
         List<GoodTransportProcessPosition> positionList = new ArrayList<>();
+
+
         for (int i = 0; i < positions.length - 1; i++) {
-            GoodTransportProcessPosition processPosition = new GoodTransportProcessPosition();
+            processPosition = new GoodTransportProcessPosition();
             String startLocal = positions[i];
             String endLocal = positions[i + 1];
             String start = GaodeUtil.getLonLat(startLocal);
             String end = GaodeUtil.getLonLat(endLocal);
-            Long distance = GaodeUtil.getDistance(start, end);
-            String distanceL = distance / 1000 + " 公里";
-            processPosition.setLocation(startLocal);
-            processPosition.setMessage(startLocal + "和" + endLocal + "之间的行驶距离为" + distanceL);
-            String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
+            Long distance = GaodeUtil.getDistance(start, end) / 1000;
+
+           // processPosition.setLocation(startLocal);
+            processPosition.setMessage("货物已到达" + startLocal + ", 正在从" + startLocal + "发往" + endLocal + "途中");
+            //  String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
+            String date = DateUnti.LocalDateTimeToStr(localDateTime);
             processPosition.setDate(date);
             positionList.add(processPosition);
+
+            localDateTime = localDateTime.plusHours((long) (distance / 16.6));
         }
-        GoodTransportProcessPosition processPosition = new GoodTransportProcessPosition();
-        processPosition.setLocation(positions[positions.length - 1]);
+
+
+         processPosition = new GoodTransportProcessPosition();
+      //  processPosition.setLocation(positions[positions.length - 1]);
         processPosition.setMessage("到达" + positions[positions.length - 1]);
-        String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
+        String date = DateUnti.LocalDateTimeToStr(localDateTime);
         processPosition.setDate(date);
         response = new ApiResponse<>(1, positionList, "位置信息列表");
         positionList.add(processPosition);
         return response;
     }
-
-
 
 
 }
