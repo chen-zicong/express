@@ -17,9 +17,15 @@ public class GoodTransportInformationImpl implements GoodTransportInformationSer
     @Autowired
     private GoodTransportInformationMapper goodTransportInformationMapper;
 
+
     @Override
-    public int updateTransportInformation(GoodTransportInformation goodTransportInformation) {
-        return goodTransportInformationMapper.updateByOrderNumberSelective(goodTransportInformation);
+    public int updateTransportInformation(List<GoodTransportInformation> goodTransportInformationList, String orderNumber) {
+        int insert = 0;
+        goodTransportInformationMapper.deleteByOrderNumber(orderNumber);
+        for (GoodTransportInformation goodTransportInformation : goodTransportInformationList) {
+            insert = goodTransportInformationMapper.insert(goodTransportInformation);
+        }
+        return insert;
     }
 
     @Override

@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface GoodTransportInformationService {
-    int updateTransportInformation(GoodTransportInformation goodTransportInformation);
+    int updateTransportInformation(List<GoodTransportInformation> goodTransportInformationList,String  orderNumber);
     ApiResponse<List<GoodTransportInformation>> insertTransportInformation(PositionList positionList);
     ApiResponse<List<GoodTransportInformation>> getTransportInformation(String orderNumber);
+
 }
