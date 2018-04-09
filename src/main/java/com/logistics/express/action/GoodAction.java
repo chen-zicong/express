@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.logistics.express.entity.*;
+import com.logistics.express.service.*;
 import com.logistics.express.unity.GaodeUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.AuthorizationException;
@@ -24,13 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.logistics.express.service.DriverService;
-import com.logistics.express.service.GoodDetailService;
-import com.logistics.express.service.GoodOrderService;
-import com.logistics.express.service.GoodPayService;
-import com.logistics.express.service.GoodTransportNodeService;
-import com.logistics.express.service.GoodTransportProcessService;
-import com.logistics.express.service.GoodTransportService;
 import com.logistics.express.unity.DateUnti;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +56,9 @@ public class GoodAction {
 
     @Autowired
     private DriverService driverService;
+
+    @Autowired
+    private GoodTransportInformationService goodTransportInformationService;
 
 
     private Logger logger = Logger.getLogger(GoodAction.class);
@@ -468,6 +465,7 @@ public class GoodAction {
                     GoodTransportProcess goodTransportProcess = goodTransProcessList.get(i);
                     goodTransportProcess.setGoodTransportProcessTime(DateUnti.dateToStr(goodTransportProcess.getGoodTransportProcesstime(), 12));//设置运输时间（把date类型转换为string，方便前端展示）
                     Driver driver = driverService.getDriverById(goodTransportProcess.getGoodTransportDriverId());
+                    System.out.println(driver.getDriverName());
                     goodTransportProcess.setDriverName(driver.getDriverName());//设置运输司机名字及手机号
                     goodTransportProcess.setDriverPhone(driver.getDriverPhone());
                 }
@@ -721,23 +719,27 @@ public class GoodAction {
     @RequestMapping(value = "addGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     // @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<PositionList> AddGoodTransportProcessPosition(PositionList positionList) {
-        ApiResponse<PositionList> response = null;
+    public ApiResponse<List<GoodTransportInformation>> AddGoodTransportProcessPosition(PositionList positionList) {
+        ApiResponse<List<GoodTransportInformation>> response = null;
         GoodTransportProcess goodTransportProcess = new GoodTransportProcess();
-
+        List<GoodTransportInformation> goodTransportInformationList;
+        ApiResponse<List<GoodTransportInformation>> listApiResponse = goodTransportInformationService.insertTransportInformation(positionList);
+        if (listApiResponse.getStatus() == 0) {
+            return response = new ApiResponse<List<GoodTransportInformation>>(0, "失败");
+        }
+        goodTransportInformationList = listApiResponse.getData();
         String[] cities = positionList.getCities();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < cities.length - 1; i++) {
             builder.append(cities[i]).append(",");
         }
 
-
         builder.append(cities[cities.length - 1]);
         goodTransportProcess.setGoodTransportProcessPosition(builder.toString());  //拼接成String放入数据库
         goodTransportProcess.setGoodOrderNumber(positionList.getOrderNumber()); //设置订单号  ,便于查询
 
-       goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
-        response = new ApiResponse<PositionList>(1, positionList, "成功");
+        goodTransportProcessService.updateTransportProcessMessage(goodTransportProcess);
+        response = new ApiResponse<List<GoodTransportInformation>>(1, goodTransportInformationList, "成功");
 
         return response;
     }
@@ -750,49 +752,28 @@ public class GoodAction {
     @RequestMapping(value = "getGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<List<GoodTransportProcessPosition>> getGoodTransportProcessPosition(String orderNumber) {
+    public ApiResponse<List<GoodTransportInformation>> getGoodTransportProcessPosition(String orderNumber) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        GoodTransportProcessPosition processPosition = null;
-        ApiResponse<List<GoodTransportProcessPosition>> response = null;
-
-        GoodTransportProcess processByOrder = goodTransportProcessService.getProcessByOrder(orderNumber);
-        if (processByOrder == null) {
-            response = new ApiResponse<>(0, "查询失败");
-            return response;
+        GoodTransportInformation processPosition = null;
+        ApiResponse<List<GoodTransportInformation>> response = null;
+        response = goodTransportInformationService.getTransportInformation(orderNumber);
+        if (orderNumber.equals("")) {
+            return response = new ApiResponse<>(0, "请添入单号");
         }
-        String position = processByOrder.getGoodTransportProcessPosition();
-        String[] positions = position.split(",");
-        List<GoodTransportProcessPosition> positionList = new ArrayList<>();
-
-
-        for (int i = 0; i < positions.length - 1; i++) {
-            processPosition = new GoodTransportProcessPosition();
-            String startLocal = positions[i];
-            String endLocal = positions[i + 1];
-            String start = GaodeUtil.getLonLat(startLocal);
-            String end = GaodeUtil.getLonLat(endLocal);
-            Long distance = GaodeUtil.getDistance(start, end) / 1000;
-
-           // processPosition.setLocation(startLocal);
-            processPosition.setMessage("货物已到达" + startLocal + ", 正在从" + startLocal + "发往" + endLocal + "途中");
-            //  String date = DateUnti.dateToStr(time, DateUnti.DATE_HM_13);
-            String date = DateUnti.LocalDateTimeToStr(localDateTime);
-            processPosition.setDate(date);
-            positionList.add(processPosition);
-
-            localDateTime = localDateTime.plusHours((long) (distance / 16.6));
-        }
-
-
-         processPosition = new GoodTransportProcessPosition();
-      //  processPosition.setLocation(positions[positions.length - 1]);
-        processPosition.setMessage("到达" + positions[positions.length - 1]);
-        String date = DateUnti.LocalDateTimeToStr(localDateTime);
-        processPosition.setDate(date);
-        response = new ApiResponse<>(1, positionList, "位置信息列表");
-        positionList.add(processPosition);
         return response;
     }
 
+
+    /**
+     * 更新位置信息
+     */
+
+    @RequestMapping(value = "updateGoodTransportProcessPosition", method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
+    public ApiResponse<List<GoodTransportInformation>> getGoodTransportProcessPosition(List<GoodTransportInformation> goodTransportInformationList, String orderNumber) {
+            return null;
+
+    }
 
 }

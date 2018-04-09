@@ -251,7 +251,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				   success: function(data){
 				   		if(data["status"] == 1){
 						alert("操作成功");
-						$("#imgWindow"/./;).empty();
+						$("#imgWindow").empty();
 						for(var i=0;i<data["data"].length;i++){
 				   			var img = "<img style='width:530px;height:470px' src='"+data["data"][i]+"'>";
 				   			$("#imgWindow").append(img);

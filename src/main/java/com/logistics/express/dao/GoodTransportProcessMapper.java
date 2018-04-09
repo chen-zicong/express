@@ -21,9 +21,9 @@ public interface GoodTransportProcessMapper {
     GoodTransportProcess getTransportProcessMsg(String goodOrderNumber);
     
     List<GoodTransportProcess> getTransportProcessList(Map<String,Object> map);
-    
+
     int getTransProcessListCount();
-    
+
     List<GoodTransportProcess> getTransProcessByDriverId(int driverId);
     
     GoodTransportProcess getProcessByOrder(String goodOrderNumber);

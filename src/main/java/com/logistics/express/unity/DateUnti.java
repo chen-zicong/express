@@ -130,7 +130,7 @@ public class DateUnti {
 
 
 	    public static String LocalDateTimeToStr(LocalDateTime localDateTime){
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 			String format = localDateTime.format(formatter);
 			return  format;
 		}
