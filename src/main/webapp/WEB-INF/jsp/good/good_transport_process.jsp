@@ -19,11 +19,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/icon.css"/>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/insdep/easyui_plus.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/wu.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.insdep-extend.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
-<style type="text/css">
+	<script type="text/javascript" src="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
+
+	<style type="text/css">
 	#deleteWin p{
 		margin-top:20px;
 		text-align:center;
@@ -43,6 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<a class="easyui-linkbutton" onclick="process.getImg(1)" iconCls="icon-search" plain='true'>查看货物原始图片</a>
 		<a class="easyui-linkbutton" onclick="process.getImg(2)" iconCls="icon-search" plain='true'>查看货物包装图片</a>
 		<a class="easyui-linkbutton" onclick="process.updatetp()" iconCls="icon-edit" plain='true'>编辑订单信息</a>
+		<a class="easyui-linkbutton" onclick="process.getSituation()" iconCls="icon-search" plain='true'>查看物流动态</a>
 		订单号 ：&nbsp<input id="goodOrderNumber" type="text" style="width:150px"/>
 		<a id="search" style="margin-left: 20px;" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>	
 	</div>
@@ -95,10 +99,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
 	</div>
 
+	<div id="situationwindow" class="easyui-window" title="物流情况" modal="true" data-options="iconCls:'icon-save'" style="top:0px;width:650px;height:350px;padding:5px;" closed="true">
+		<div style="margin-left: 150px"><label style="font-size: 18px;color: red">物流单号  : </label><input style="height:30px;width:300px;font-size:17px;border: 0;color: red" type="text" id="wldh"></div>
+		<table align="center" width="400" border="0" cellspacing="20" id="tb2" style="margin-left: 50px">
 
+		</table>
+		<div style="margin-top:30px">
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="margin-right:100px;margin-left:180px" onclick="Savetime()">确定</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#situationwindow').window('close')">取消</a>
+		</div>
+
+	</div>
 
 	<script type="text/javascript">
-
+        var flag=1;
 		//var TreeId='<%=session.getAttribute("loginTreeId")%>';
 		$(function(){
 		$("#meeting").datagrid({
@@ -207,17 +221,61 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             var goodTransportProcessPosition = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodTransportProcessPosition")).text();
             $('#goodOrderNumbers').val(goodOrderNumber);
             $('#goodTransportProcessPosition').val(goodTransportProcessPosition);
-
 			$("#updatetp").window('open');
 
 
+        },
 
+		//查看物流动态
+        getSituation:function () {
+            if ($(".datagrid-row-selected").size() == 0) {
+                $.messager.alert('警告', '请选择一项进行操作');
+                return;
+            } else if ($(".datagrid-row-selected").size() > 1) {
+                $.messager.alert('警告', '请只选择一项进行操作');
+                return;
+            }
+            var goodOrderNumber = $(".datagrid-row-selected").find($(".datagrid-cell-c1-goodOrderNumber")).text();
+            $('#wldh').val(goodOrderNumber);
+            $.ajax({
+                type: "POST",
+                url: "/express/good/getGoodTransportProcessPosition",
+				dataType:'json',
+                data: {
+                    orderNumber: goodOrderNumber
+                },
+                success: function (json){
+                    console.log(json);
+                    var lengths=getJsonLength(json);
+                    if(flag) {
+                        for (var i = 0; i <= lengths; i++) {
+                            var tpl =
+                                '<tr>' +
+                                '<th align="right" style="margin-right:10px"><input style="height:28px;width:150px;font-size:16px;border: 0"  name="goodtime" id="goodtime" " type="text" value="' + json.data[i].date + '" /></th>' +
+                                '<td>' +
+                                '<span style="font-size:16px">' + json.data[i].information + '</span>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#tb2').append(tpl);
+
+                        }
+                        for (var j = 0; j <= lengths; j++) {
+                            $("#tb2").find("th").eq(j).find("input").datetimepicker();
+                        }
+                    }
+                    flag=0;  //防止多次添加
+				}
+
+
+			});
+
+            $("#situationwindow").window('open');
 
         }
 
 
     };
-      //初始化货物运输过程地址
+    /*  //初始化货物运输过程地址
        function init(positions_list) {
           for(var i=0;i<positions_list.length;i++){
               var tpl='<tr>'+
@@ -227,7 +285,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               $("#tb").append(tpl);
 		  }
 
-       }
+       }*/
 
    //添加位置框
     function addpositions() {
@@ -265,7 +323,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               $.ajax({
                 type: "POST",
                 url: "/express/good/addGoodTransportProcessPosition",
-				traditional:true,
+				traditional:true, //取消深度序列化
                 data: {
                     orderNumber:goodOrderNumber,
                     cities:temporary_positions
@@ -284,7 +342,60 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             })
             }
         }
+        //获取json数组长度
+        function getJsonLength(jsonData){
 
-  	</script>
+            var jsonLength = 0;
+
+            for(var item in jsonData){
+
+                jsonLength++;
+
+            }
+
+            return jsonLength;
+
+        }
+       //更新物流时间
+		function Savetime() {
+            var lengths=$("#tb2").find("tr").length;
+            var goodOrderNumber=$('#wldh').val();
+            var json={};
+            var data=[];
+            for(var i=0;i<lengths;i++){
+                var Array={};
+                var information=$("#tb2").find("tr").eq(i).find("span").text();
+                var dates=$("#tb2").find("tr").eq(i).find("input").val();
+                Array.information=information;
+                Array.date=dates;
+                data.push(Array);
+			}
+			json.data=data;
+			console.log(json);
+            $.ajax({
+                type: "POST",
+                traditional:true,
+                url: "/express/good/updateGoodTransportProcessPosition",
+                data: {
+                    orderNumber:goodOrderNumber,
+                    goodTransportInformationList:json
+                },
+                success: function(data){
+                    if(data["status"] == 1){
+                        alert("操作成功");
+                        window.location.reload();
+                    }else{
+                        alert(data["message"]);
+                        window.location.reload();
+                    }
+                }
+			})
+
+        }
+
+
+	</script>
+
+
 </body>
 </html>
