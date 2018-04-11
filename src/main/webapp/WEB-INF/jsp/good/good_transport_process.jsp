@@ -19,15 +19,12 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/icon.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/insdep/easyui_plus.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/wu.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css">
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.insdep-extend.min.js"></script>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath}/easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript"
-            src="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
     <style type="text/css">
         #deleteWin p {
@@ -134,7 +131,7 @@
 </div>
 
 <script type="text/javascript">
-    var flag = 1;
+    var flag =0;
     //var TreeId='<%=session.getAttribute("loginTreeId")%>';
     $(function () {
         $("#meeting").datagrid({
@@ -269,23 +266,22 @@
                 success: function (json) {
                     console.log(json);
                     var lengths = getJsonLength(json);
-                    if (flag) {
-                        for (var i = 0; i <= lengths; i++) {
-                            var tpl =
-                                '<tr>' +
-                                '<th align="right" style="margin-right:10px"><input style="height:28px;width:150px;font-size:16px;border: 0"  name="goodtime" id="goodtime" " type="text" value="' + json.data[i].date + '" /></th>' +
-                                '<td>' +
-                                '<span style="font-size:16px">' + json.data[i].information + '</span>' +
-                                '</td>' +
-                                '</tr>';
-                            $('#tb2').append(tpl);
+                    console.log(flag);
 
-                        }
-                        for (var j = 0; j <= lengths; j++) {
-                            $("#tb2").find("th").eq(j).find("input").datetimepicker();
-                        }
-                    }
-                    flag = 0;  //防止多次添加
+                           for (flag; flag <= lengths; flag++) {
+                               console.log(json.data[flag].date);
+                               var tpl =
+                                   '<tr>' +
+                                   '<th align="right" style="margin-right:10px"><input style="height:28px;width:150px;font-size:16px;border: 0"  name="goodtime" id="goodtime" " type="text" value="' + (json.data[flag].date || "") + '" /></th>' +
+                                   '<td>' +
+                                   '<span style="font-size:16px">' + json.data[flag].information + '</span>' +
+                                   '</td>' +
+                                   '</tr>';
+                               $('#tb2').append(tpl);
+                               $("#tb2").find("tr").eq(flag).find("input").datetimepicker();
+                           }
+
+
                 }
 
 
@@ -293,8 +289,7 @@
 
             $("#situationwindow").window('open');
 
-        }
-
+        },
 
     };
     /*  //初始化货物运输过程地址
@@ -421,8 +416,11 @@
     }
 
 
+
+
+
 </script>
 
-
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
 </body>
 </html>
