@@ -28,5 +28,7 @@ public interface GoodOrderService {
 	
 	//根据订单号获取订单信息
 	public GoodOrder getOrderByNumber(String goodOrderNumber);
+
+	public GoodOrder checkOrderNumber(String OrderNumber);
 	
 }

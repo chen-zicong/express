@@ -55,6 +55,11 @@ public class GoodOrderServiceImpl implements GoodOrderService {
 	}
 
 	@Override
+	public GoodOrder checkOrderNumber(String OrderNumber) {
+		return goodOrderMapper.selectByPrimaryKey(OrderNumber);
+	}
+
+	@Override
 	public int deleteOrder(String goodOrderNumber) {
 		
 		return goodOrderMapper.deleteByPrimaryKey(goodOrderNumber);

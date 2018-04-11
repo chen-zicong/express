@@ -317,7 +317,6 @@
         $("#tb").append(tpl);
     }
 
-
     //查询按钮的点击触发事件
     $("#search").click(function () {
         var goodOrderNumber = $("#goodOrderNumber").val();

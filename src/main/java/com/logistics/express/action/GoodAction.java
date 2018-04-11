@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.logistics.express.dao.GoodOrderMapper;
 import com.logistics.express.entity.*;
 import com.logistics.express.service.*;
 import org.apache.log4j.Logger;
@@ -779,4 +780,15 @@ public class GoodAction {
         return response = new ApiResponse<>(1, "更新成功");
     }
 
+    @Transactional
+    @RequestMapping(value = "checkOrderNumber", method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
+    public ApiResponse checkOrderNumber(String orderNumber) {
+        GoodOrder goodOrder = goodOrderService.checkOrderNumber(orderNumber);
+        if(goodOrder==null){
+            return  new ApiResponse(0,"订单号错误");
+        }
+        return  new ApiResponse(1,"查询成功");
+    }
 }
