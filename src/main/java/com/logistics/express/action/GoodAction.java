@@ -12,9 +12,7 @@ import java.util.Map;
 
 import com.logistics.express.entity.*;
 import com.logistics.express.service.*;
-import com.logistics.express.unity.GaodeUtil;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -22,16 +20,13 @@ import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.logistics.express.unity.DateUnti;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("good")
 @Controller
@@ -749,7 +744,7 @@ public class GoodAction {
     /**
      * 获取位置信息
      */
-
+    @Transactional
     @RequestMapping(value = "getGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
@@ -768,15 +763,18 @@ public class GoodAction {
     /**
      * 更新位置信息
      */
-
+    @Transactional
     @RequestMapping(value = "updateGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<T> getGoodTransportProcessPosition(List<GoodTransportInformation> goodTransportInformationList, String orderNumber) {
-        ApiResponse<T> response;
+    public ApiResponse updateGoodTransportProcessPosition(@RequestBody UpdateGoodTransportInformation updateGoodTransportInformation) {
+        List<GoodTransportInformation> goodTransportInformationList = updateGoodTransportInformation.getGoodTransportInformationList();
+        String orderNumber = updateGoodTransportInformation.getOrderNumber();
+     //   System.out.println(goodTransportInformationList.get(0).getInformation()+"-----------------------");
+        ApiResponse response=null;
         int i = goodTransportInformationService.updateTransportInformation(goodTransportInformationList, orderNumber);
-        if (i == 0) {
-            return response = new ApiResponse<>(0, "更新出错");
+       if (i == 0) {
+           return response = new ApiResponse<>(0, "更新出错");
         }
         return response = new ApiResponse<>(1, "更新成功");
     }
