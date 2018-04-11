@@ -79,14 +79,16 @@ public class GoodTransportInformationImpl implements GoodTransportInformationSer
     }
 
     @Override
-    public ApiResponse<List<GoodTransportInformation>> getTransportInformation(String orderNumber) {
-        ApiResponse<List<GoodTransportInformation>> response = null;
+    public ApiResponse<UpdateGoodTransportInformation> getTransportInformation(String orderNumber) {
+        ApiResponse<UpdateGoodTransportInformation> response = null;
+        UpdateGoodTransportInformation updateGoodTransportInformation = new UpdateGoodTransportInformation();
         List<GoodTransportInformation> informationByOrderNumber = goodTransportInformationMapper.getInformationByOrderNumber(orderNumber);
+        updateGoodTransportInformation.setGoodTransportInformationList(informationByOrderNumber);
         if (informationByOrderNumber.size() == 0) {
-            return response = new ApiResponse<List<GoodTransportInformation>>(0, "获取失败,检查订单号是否错误");
+            return response = new ApiResponse<UpdateGoodTransportInformation>(0, "获取失败,检查订单号是否错误");
         }
 
-        return response = new ApiResponse<>(1, informationByOrderNumber, "成功");
+        return response = new ApiResponse<>(1, updateGoodTransportInformation, "成功");
     }
 
 }

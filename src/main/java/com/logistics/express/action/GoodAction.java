@@ -748,10 +748,10 @@ public class GoodAction {
     @RequestMapping(value = "getGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
-    public ApiResponse<List<GoodTransportInformation>> getGoodTransportProcessPosition(String orderNumber) {
+    public ApiResponse<UpdateGoodTransportInformation> getGoodTransportProcessPosition(String orderNumber) {
         LocalDateTime localDateTime = LocalDateTime.now();
         GoodTransportInformation processPosition = null;
-        ApiResponse<List<GoodTransportInformation>> response = null;
+        ApiResponse<UpdateGoodTransportInformation> response = null;
         response = goodTransportInformationService.getTransportInformation(orderNumber);
         if (orderNumber.equals("")) {
             return response = new ApiResponse<>(0, "请添入单号");
