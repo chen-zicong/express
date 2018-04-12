@@ -137,7 +137,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					localStorage.setItem("goodOrderNumber",goodOrderNumber);
 					$.ajax({
                         type: "POST",
-                        url:"/express/good/checkOrderNumber",
+                        url:"/express/good/checkOrderNumberBywechat",
                         data:{
                             orderNumber:goodOrderNumber
                         },
@@ -145,10 +145,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             if (data["status"] == 1) {
                                 alert("操作成功");
                                 console.log(goodOrderNumber);
-                                window.location.href = "/express/Base/goURL/home/LogisticsInformation";
+                                window.location.href = "/express/Base/goURL/home/LogisticsInformation?identify=wechat";
                             } else {
                                 validateDialog.fadeDialog("请输入正确的单号!");
-                                window.location.href = "/express/Base/goURL/home/LogisticsInformation";
                                 return;
                             }
                         }

@@ -748,7 +748,6 @@ public class GoodAction {
     @Transactional
     @RequestMapping(value = "getGoodTransportProcessPosition", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
     public ApiResponse<UpdateGoodTransportInformation> getGoodTransportProcessPosition(String orderNumber) {
         LocalDateTime localDateTime = LocalDateTime.now();
         GoodTransportInformation processPosition = null;
@@ -781,14 +780,33 @@ public class GoodAction {
     }
 
     @Transactional
-    @RequestMapping(value = "checkOrderNumber", method = RequestMethod.POST)
+    @RequestMapping(value = "checkOrderNumberBywechat", method = RequestMethod.POST)
     @ResponseBody
-    @RequiresRoles(value = {"2", "3"}, logical = Logical.OR)
     public ApiResponse checkOrderNumber(String orderNumber) {
         GoodOrder goodOrder = goodOrderService.checkOrderNumber(orderNumber);
         if(goodOrder==null){
             return  new ApiResponse(0,"订单号错误");
         }
+
         return  new ApiResponse(1,"查询成功");
     }
+
+    /**
+     * 获取位置信息
+     */
+    @Transactional
+    @RequestMapping(value = "getGoodTransportProcessPositionBywechat", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiResponse<UpdateGoodTransportInformation> getGoodTransportProcessPositionByWechat
+    (String orderNumber) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        GoodTransportInformation processPosition = null;
+        ApiResponse<UpdateGoodTransportInformation> response = null;
+        response = goodTransportInformationService.getTransportInformation(orderNumber);
+        if (orderNumber.equals("")) {
+            return response = new ApiResponse<>(0, "请添入单号");
+        }
+        return response;
+    }
+
 }

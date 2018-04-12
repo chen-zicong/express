@@ -120,7 +120,7 @@
 <div id="situationwindow" class="easyui-window" title="物流情况" modal="true" data-options="iconCls:'icon-save'"
      style="top:0px;width:650px;height:350px;padding:5px;" closed="true">
     <div style="margin-left: 150px"><label style="font-size: 18px;color: red">物流单号 : </label><input
-            style="height:30px;width:300px;font-size:17px;border: 0;color: red" type="text" id="wldh"></div>
+            style="height:30px;width:300px;font-size:17px;border: 0;color: red" type="text" id="wldh" disabled="disabled"></div>
     <table align="center" width="400" border="0" cellspacing="20" id="tb2" style="margin-left: 50px">
 
     </table>

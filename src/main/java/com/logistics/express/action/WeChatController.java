@@ -2,6 +2,7 @@ package com.logistics.express.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,23 +12,30 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.logistics.express.entity.*;
+import com.logistics.express.service.GoodOrderService;
+import com.logistics.express.service.GoodTransportInformationService;
 import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSONObject;
 import com.logistics.express.service.WeChatService;
-import com.logistics.express.entity.TextMessage;
-
-
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
 @RequestMapping("wechat")
 
 public class WeChatController extends HttpServlet{
-	
+	@Autowired
+	private GoodTransportInformationService goodTransportInformationService;
+
+	@Autowired
+	private GoodOrderService goodOrderService;
 	private final String token="tokencheck";
 	@Resource
 	private WeChatService wechatService;
@@ -120,5 +128,24 @@ public class WeChatController extends HttpServlet{
 		jsonObject.put("aaa", "aaa");
 		outPrintWriter.write(jsonObject.toString());
 	}
-	
+	/**
+	 * 获取位置信息
+	 */
+	@Transactional
+	@RequestMapping(value = "getGoodTransportProcessPositionBywechat", method = RequestMethod.POST)
+	@ResponseBody
+	public ApiResponse<UpdateGoodTransportInformation> getGoodTransportProcessPosition(String orderNumber) {
+		LocalDateTime localDateTime = LocalDateTime.now();
+		GoodTransportInformation processPosition = null;
+		ApiResponse<UpdateGoodTransportInformation> response = null;
+		response = goodTransportInformationService.getTransportInformation(orderNumber);
+		if (orderNumber.equals("")) {
+			return response = new ApiResponse<>(0, "请添入单号");
+		}
+		return response;
+	}
+
+
+
+
 }

@@ -42,7 +42,7 @@
     <script src="${pageContext.request.contextPath}/assets/js/amazeui.min.js"></script>
 </head>
 <body>
-    <div>
+    <div style="margin-top: 10px">
         <span style="color: #949799;margin-left: 15px">订单号 : </span><span  id="goodOrderNumber" style="font-weight:bold"></span>
         <br>
         <span style="color: #949799;margin-left: 15px">国内承运人 : </span><span style="font-weight:bold">马赛物流</span>
@@ -50,39 +50,69 @@
 
 
 <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
-<section data-am-widget="accordion" class="am-accordion am-accordion-default" data-am-accordion='{ "multiple": true }'>
+<section  id="wl" data-am-widget="accordion" class="am-accordion am-accordion-default" data-am-accordion='{ "multiple": true }'>
 
-    <hr data-am-widget="divider" style="" class="am-divider am-divider-default" />
-    <dl class="am-accordion-item am-active">
-        <dt class="am-accordion-title">
-           物流信息:
-        </dt>
-        <dd class="am-accordion-bd am-collapse ">
-            <!-- 规避 Collapase 处理有 padding 的折叠内容计算计算有误问题， 加一个容器 -->
-            <div class="am-accordion-content">
-                打包成功  2018-03-07/22:08
-            </div>
-        </dd>
-    </dl>
-    <dl class="am-accordion-item am-active">
-        <dt class="am-accordion-title">
-             物流信息:
-        </dt>
-        <dd class="am-accordion-bd am-collapse ">
-            <!-- 规避 Collapase 处理有 padding 的折叠内容计算计算有误问题， 加一个容器 -->
-            <div class="am-accordion-content">
-                准备出库  2018-03-06/21：09
-            </div>
-        </dd>
-    </dl>
 </section>
 <script type="text/javascript">
    var goodOrderNumber=localStorage.getItem("goodOrderNumber");
+   var flag=0;
     $(function () {
         console.log(goodOrderNumber);
         $('#goodOrderNumber').text(goodOrderNumber);
+        console.log(3);
+        $.ajax({
+            type: "POST",
+            url: "/express/good/getGoodTransportProcessPositionBywechat",
+            dataType: 'json',
+            data: {
+                orderNumber: goodOrderNumber
+            },
+            success: function (json) {
+                var currenttimes,goodtimes; //获取当前时间/货物运输时间
+                var lengths = getJsonLength(json);
+                for (flag; flag <= lengths; flag++) {
+                    currenttimes=(new Date()).getTime();
+                    goodtimes=(new Date(json.data.goodTransportInformationList[flag].date)).getTime();
+                    var tpl=
+                 '<dl class="am-accordion-item am-active">'+
+                        '<dt class="am-accordion-title">当前物流信息:</dt>'+
+                    '<dd class="am-accordion-bd am-collapse am-in">'+
+                        <!-- 规避 Collapase 处理有 padding 的折叠内容计算计算有误问题， 加一个容器 -->
+                        '<div class="am-accordion-content">'+
+                        '<span style="font-weight: bold;font-size: 15px">'+json.data.goodTransportInformationList[flag].information +'</span>'+
+                        '<br>'+
+                        '<span style="font-size:10px">'+json.data.goodTransportInformationList[flag].date+'</span>'+
+                    '</div>'+
+                    '</dd>'+
+                    '</dl>';
+                    if(currenttimes-goodtimes>=1){
+                   $('#wl').prepend(tpl);
+                    }
 
-    })
+                }
+
+            }
+
+        })
+
+
+    });
+
+
+   //获取json数组长度
+   function getJsonLength(jsonData) {
+
+       var jsonLength = 0;
+
+       for (var item in jsonData) {
+
+           jsonLength++;
+
+       }
+
+       return jsonLength;
+
+   }
 
 </script>
 </body>
