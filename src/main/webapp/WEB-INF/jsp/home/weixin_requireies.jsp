@@ -107,31 +107,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="requireDiv">
 	 <div class="requireInputDiv">
 	 	<i class="inputIcon" ><i class="icon iconfont icon-chaxun" style="font-size: 40px;position: absolute;top:-5px;left:10px;color:#2ECC71; "></i></i>
-	 	<input type="text" name="" class="requireInput" placeholder="输入查询单号">
+	 	<input type="text" name="goodOrderNumber" class="requireInput" placeholder="输入查询单号">
 	 </div>
 	 <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary requireSumbit" id="requireSumbit" onclick="requireies.submit()">点击查询</a>
 	 </div>
-	
-	<div id="addWin" class="easyui-window" title="新增管理员" modal="true" data-options="iconCls:'icon-save'" style="top:20px;width:600px;height:500px;padding-top:20px;" closed="true">
 
-		 <table align="center" width="500" border="0" cellspacing="20" >
-		 	<tr>
-		 		<th align="right" style="margin-right:20px"><span style="font-size:16px">管理员姓名:</span></th>
-		 		<td><input class="easyui-textbox" style="height:30px;width:300px;font-size:20px" type="text" name="adminName" id="adminName" /></td>
-		 	</tr>
-		 	<tr>
-		 		<th align="right"><span style="font-size:16px">管理员手机:</span></th>
-		 		<td><input class="easyui-textbox" style="height:30px;width:300px;font-size:20px" type="text" name="adminPhone" id="adminPhone" /></td>
-		 	</tr>
-		 	<tr>
-		 		<th align="right"><span style="font-size:16px">管理员密码:</span></th>
-		 		<td><input class="easyui-textbox" style="height:30px;width:300px;font-size:20px" type="text" name="adminPassword" id="adminPassword" /></td>
-		 	</tr>
-		 </table>
-		
-	</div>  
-	
-	
 
 
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
@@ -153,26 +133,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					return;
 				}else{
 					var goodOrderNumber = $(".requireInput").val();
+                    console.log(goodOrderNumber);
+					localStorage.setItem("goodOrderNumber",goodOrderNumber);
 					$.ajax({
-						url:"/express/good/getTransportMessage?identify=wechat",
-						data: {
-						   goodOrderNumber:goodOrderNumber
-				   		},
-						dataType:"JSON",
-						type:"POST",
-						success:function(data){
-						if(data["status"] == 1){
-							alert(data["data"].goodTransportProcessPosition);
-							$("#goodTransportProcessPosition").val(data["data"].goodTransportProcessPosition);
-							$("#goodTransportProcessPosition").val(data["data"].goodTransportProcessTime);
-							$("#addWin").window('open');
-							alert(data["data"].goodTransportProcessTime);
-					   	}else{
-							alert(data["message"]);
-							window.location.reload();
-					   	}
-						}
-					});
+                        type: "POST",
+                        url:"/express/good/checkOrderNumber",
+                        data:{
+                            orderNumber:goodOrderNumber
+                        },
+                        success:function (data) {
+                            if (data["status"] == 1) {
+                                alert("操作成功");
+                                console.log(goodOrderNumber);
+                                window.location.href = "/express/Base/goURL/home/LogisticsInformation";
+                            } else {
+                                validateDialog.fadeDialog("请输入正确的单号!");
+                                window.location.href = "/express/Base/goURL/home/LogisticsInformation";
+                                return;
+                            }
+                        }
+
+                    })
+
+
+
+
 				}
 			}
 		}
